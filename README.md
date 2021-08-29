@@ -26,18 +26,19 @@ Return value:
 The **Type** class extends the **String** class. In addition to storing a type name, its properties reveal whether the tested value was an object or a primitive.
 
 Syntax:
-> `new Type(typeName, isPrimitive)`
+> `new Type(typeName)`
+> `new Type(typeName, objectType)`
 
 Parameters:
 - ***typeName*** - (string)
-- ***objectType*** - (string) Optional. The object name used by `Object.prototype.toString()`. Pass this argument for object types only.
+- ***objectType*** - (string) The object name used by `Object.prototype.toString()`. If `objectType` is truthy, the Type instance is considered to be for a type of object (not a primitive).
 
 | Property | Type | Description |
 | --- | --- | --- |
-| .**type** | string | The type name. This is also the instance's primitive value. |
-| .**objectType** | string | The object name used by `Object.prototype.toString()`.. |
-| .**primitive** | string | If the `objectType` argument was falsy when constructed, this property was set to the type name. Otherwise, it's undefined. |
-| .**object** | string | If the `objectType` argument was truthy when constructed, this property was set to the type name. Otherwise, it's undefined. |
+| .**type** | string | The type name (`typeName`). This is also the instance's primitive value. |
+| .**objectType** | string | The object name used by `Object.prototype.toString()`. |
+| .**primitive** | string | For primitive types, this property is set to `typeName`. Otherwise, it's undefined. |
+| .**object** | string | For object types (i.e., `objectType` is truthy), this property is set to `typeName`. Otherwise, it's undefined. |
 
 ### Example
 
