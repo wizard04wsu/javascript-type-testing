@@ -26,7 +26,7 @@ Return value:
 The **Type** class extends the **String** class. In addition to storing a type name, its properties reveal whether the tested value was an object or a primitive.
 
 Syntax:
-> `new Type(typeName)`
+> `new Type(typeName)`  
 > `new Type(typeName, objectType)`
 
 Parameters:
