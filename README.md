@@ -31,14 +31,14 @@ Syntax:
 
 Parameters:
 - ***typeName*** - (string)
-- ***objectType*** - (string) The object name used by `Object.prototype.toString()`. If `objectType` is truthy, the Type instance is considered to be for a type of object (not a primitive).
+- ***objectType*** - (string) The object name used by `Object.prototype.toString()`. Include this for object types. Do not include this for primitive types.
 
 | Property | Type | Description |
 | --- | --- | --- |
 | .**type** | string | The type name (`typeName`). This is also the instance's primitive value. |
 | .**objectType** | string | The object name used by `Object.prototype.toString()`. |
 | .**primitive** | string | For primitive types, this property is set to `typeName`. Otherwise, it's undefined. |
-| .**object** | string | For object types (i.e., `objectType` is truthy), this property is set to `typeName`. Otherwise, it's undefined. |
+| .**object** | string | For object types, this property is set to `typeName`. Otherwise, it's undefined. |
 
 ### Example
 
