@@ -30,29 +30,32 @@ Syntax:
 
 Parameters:
 - ***typeName*** - (string)
-- ***isPrimitive*** - (boolean) Optional.
+- ***objectType*** - (string) Optional. The object name used by `Object.prototype.toString()`. Pass this argument for object types only.
 
 | Property | Type | Description |
 | --- | --- | --- |
-| .**type** | string | The type name. This is equivalent to the class's string value. |
-| .**primitive** | string | If the `isPrimitive` argument was truthy when constructed, this property was set to the type name. Otherwise, it's undefined. |
-| .**object** | string | If the `isPrimitive` argument was falsy when constructed, this property was set to the type name. Otherwise, it's undefined. |
+| .**type** | string | The type name. This is also the instance's primitive value. |
+| .**objectType** | string | The object name used by `Object.prototype.toString()`.. |
+| .**primitive** | string | If the `objectType` argument was falsy when constructed, this property was set to the type name. Otherwise, it's undefined. |
+| .**object** | string | If the `objectType` argument was truthy when constructed, this property was set to the type name. Otherwise, it's undefined. |
 
 ### Example
 
 ```
-let u;
-let p = 2;
-let o = new Number(3);
+is(2).type;	// "number"
+is(2)+""	// "number"
+is(2) == "number";	//true
+is(2).primitive === "number";	// true
+is(2).object === "number";	// false
+is(2).objectType;	// undefined
 
-is(u).type;	// "undefined"
-is(p).type;	// "number"
+let o = new Number(2);
 is(o).type;	// "number"
 is(o)+""	// "number"
-
 is(o) == "number";	//true
 is(o).primitive === "number";	// false
 is(o).object === "number";	// true
+is(o).objectType;	// "Number"
 ```
 
 ---
@@ -62,8 +65,8 @@ is(o).object === "number";	// true
 
 For each of the type-testing methods, the only parameter is the item to be tested. The return value is a boolean.
 
-**is.primitive()**  
 **is.object()**  
+**is.primitive()**  
 
 **is.undefined()**  
 **is.null()**  
@@ -77,9 +80,14 @@ For each of the type-testing methods, the only parameter is the item to be teste
 **is.boolean()**  
 **is.string()**  
 **is.symbol()**  
-**is.array()**  
-**is.date()**  
-**is.regexp()**  
 **is.function()**  
 
-
+**is.array()**  
+**is.date()**  
+**is.error()**  
+**is.regexp()**  
+**is.map()**  
+**is.set()**  
+**is.weakmap()**  
+**is.weakset()**  
+**is.promise()**  
