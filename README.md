@@ -21,9 +21,9 @@ Parameters:
 Return value:
 - A [Type](#the-type-class) object.
 
-### Type objects
+### The Type class
 
-In addition to storing a type name, a **Type** object's properties reveal whether the tested value was an object or a primitive.
+A String object storing a primitive type, with the following additional properties.
 
 | Property        | Type   | Description
 | - | - | -

@@ -4,7 +4,24 @@ const String = globalThis["String"];
 const Number = globalThis["Number"];
 const Boolean = globalThis["Boolean"];
 
-class Type {
+const typeofTypes = [
+	/*** primitives ***/
+	"undefined",
+	"null",
+	"bigint",
+	"symbol",
+	
+	/*** primitives & objects ***/
+	"boolean",
+	"number",
+	"string",
+	
+	/*** objects ***/
+	"object",
+	"function",
+];
+
+class Type extends String {
 	/**
 	 * @constructor
 	 * @param {string} typeName - The result of the `typeof` operator.
@@ -13,10 +30,12 @@ class Type {
 	constructor(typeName, objectType){
 		if(!(typeof typeName === "string" || typeName instanceof String))
 			throw new TypeError("'typeName' must be a string");
-		if(typeName == "")
-			throw new RangeError("'typeName' cannot be an empty string");
+		if(!typeofTypes.includes(typeName))
+			throw new RangeError("'typeName' must be a primitive type, 'object', or 'function'");
 		if(objectType && !(typeof objectType === "string" || objectType instanceof String))
 			throw new TypeError("'objectType' must be a string");
+		
+		super(typeName);
 		
 		this.type = typeName;
 		this.objectType = objectType || "";
@@ -50,29 +69,12 @@ function is(value){
 	return new Type(type);
 }
 
-
-is.object = (v)=>(v instanceof Object);
-is.primitive = (v)=>!is.object(v);
-
-const typeofTypes = [
-	/*** primitives ***/
-	"undefined",
-	"null",
-	"bigint",
-	"symbol",
-	
-	/*** primitives & objects ***/
-	"boolean",
-	"number",
-	"string",
-	
-	/*** objects ***/
-	//"object",
-	"function",
-];
 for(const type of typeofTypes){
 	is[type] = (v)=>(is(v).type === type);
 }
+
+is.object = (v)=>(v instanceof Object);
+is.primitive = (v)=>!is.object(v);
 
 const isNumberish = is.number;
 is.number = (v)=>(isNumberish(v) && Number.isFinite(v));
