@@ -4,34 +4,26 @@ const String = globalThis["String"];
 const Number = globalThis["Number"];
 const Boolean = globalThis["Boolean"];
 
-class Type extends String {
+class Type {
 	/**
 	 * @constructor
-	 * @param {string} typeName - The type's name, regardless of whether it's an object or a primitive.
-	 * @param {string} [objectType] - If this is an object, the object's name. Falsy for a primitive.
+	 * @param {string} typeName - The result of the `typeof` operator.
+	 * @param {string} [objectType] - For objects, the object's class name. Falsy for primitives.
 	 */
 	constructor(typeName, objectType){
 		if(!(typeof typeName === "string" || typeName instanceof String))
 			throw new TypeError("'typeName' must be a string");
 		if(typeName == "")
 			throw new RangeError("'typeName' cannot be an empty string");
-		typeName = String(typeName);
-		if(objectType){
-			if(!(typeof objectType === "string" || objectType instanceof String))
-				throw new TypeError("'objectType' must be a string");
-			objectType = String(objectType);
-		}
-		
-		super();
+		if(objectType && !(typeof objectType === "string" || objectType instanceof String))
+			throw new TypeError("'objectType' must be a string");
 		
 		this.type = typeName;
-		if(objectType){
-			this.objectType = objectType;
-			this.object = true;
-		}
-		else{
-			this.primitive = true;
-		}
+		this.objectType = objectType || "";
+		
+		this.type = typeName;
+		this.primitive = !this.objectType;
+		this.object = !this.primitive;
 	}
 }
 
