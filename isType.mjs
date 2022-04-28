@@ -1,4 +1,9 @@
 
+const Object = globalThis["Object"];
+const String = globalThis["String"];
+const Number = globalThis["Number"];
+const Boolean = globalThis["Boolean"];
+
 class Type extends String {
 	/**
 	 * @constructor
@@ -8,6 +13,8 @@ class Type extends String {
 	constructor(typeName, objectType){
 		if(!(typeof typeName === "string" || typeName instanceof String))
 			throw new TypeError("'typeName' must be a string");
+		if(typeName == "")
+			throw new RangeError("'typeName' cannot be an empty string");
 		typeName = String(typeName);
 		if(objectType){
 			if(!(typeof objectType === "string" || objectType instanceof String))
@@ -15,14 +22,15 @@ class Type extends String {
 			objectType = String(objectType);
 		}
 		
-		super(typeName);
+		super();
 		
+		this.type = typeName;
 		if(objectType){
-			this.type = this.object = typeName;
 			this.objectType = objectType;
+			this.object = true;
 		}
 		else{
-			this.type = this.primitive = typeName;
+			this.primitive = true;
 		}
 	}
 }
@@ -74,9 +82,10 @@ for(const type of typeofTypes){
 	is[type] = (v)=>(is(v).type === type);
 }
 
-is.number.real = (v)=>(is.number(v) && Number.isFinite(1*v));
-is.number.infinite = (v)=>(is.number(v) && !Number.isFinite(1*v) && !Number.isNaN(1*v));
-is.number.NaN = (v)=>(is.number(v) && Number.isNaN(1*v));	//Note that JavaScript doesn't correctly treat all undefined forms as NaN (e.g., 1/0 and 0**0).
+const isNumberish = is.number;
+is.number = (v)=>(isNumberish(v) && Number.isFinite(v));
+is.infinite = (v)=>(isNumberish(v) && !Number.isFinite(v) && !Number.isNaN(v));
+is.nan = (v)=>(isNumberish(v) && Number.isNaN(v));	//Note that JavaScript doesn't correctly treat all undefined forms as NaN (e.g., 1/0 and 0**0 are undefined forms, but JavaScript treats them as Infinity).
 
 const otherCommonTypes = [
 	"Error",

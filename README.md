@@ -21,41 +21,33 @@ Parameters:
 Return value:
 - A [Type](#the-type-class) object.
 
-### The Type class
+### Type objects
 
-The **Type** class extends the **String** class. In addition to storing a type name, its properties reveal whether the tested value was an object or a primitive.
+In addition to storing a type name, a **Type** object's properties reveal whether the tested value was an object or a primitive.
 
-Syntax:
-> `new Type(typeName)`  
-> `new Type(typeName, objectType)`
-
-Parameters:
-- ***typeName*** - (string)
-- ***objectType*** - (string) The object name used by `Object.prototype.toString()`. Include this for object types. Do not include this for primitive types.
-
-| Property | Type | Description |
-| --- | --- | --- |
-| .**type** | string | The type name (`typeName`). This is also the instance's primitive value. |
-| .**objectType** | string | The object name used by `Object.prototype.toString()`. |
-| .**primitive** | string | For primitive types, this property is set to `typeName`. Otherwise, it's undefined. |
-| .**object** | string | For object types, this property is set to `typeName`. Otherwise, it's undefined. |
+| Property        | Type   | Description
+| - | - | -
+| .**type**       | string | The type name returned by the `typeof` operator.
+| .**objectType** | string | The object name used by `Object.prototype.toString()`. Undefined for primitive types.
+| .**primitive**  | string | True for primitive types.
+| .**object**     | string | True for object types.
 
 ### Example
 
 ```
 is(2).type;	// "number"
-is(2)+""	// "number"
+is(2).toString()	// "number"
 is(2) == "number";	//true
-is(2).primitive === "number";	// true
-is(2).object === "number";	// false
+is(2).primitive;	// true
+is(2).object;	// undefined
 is(2).objectType;	// undefined
 
 let o = new Number(2);
 is(o).type;	// "number"
-is(o)+""	// "number"
+is(o).toString()	// "number"
 is(o) == "number";	//true
-is(o).primitive === "number";	// false
-is(o).object === "number";	// true
+is(o).primitive;	// undefined
+is(o).object;	// true
 is(o).objectType;	// "Number"
 ```
 
@@ -72,10 +64,11 @@ For each of the type-testing methods, the only parameter is the item to be teste
 **is.undefined()**  
 **is.null()**  
 
-**is.number()**  
-**is.number.real()** - This is most likely what you actually want to use when testing for a number.  
-**is.number.infinite()**  
-**is.number.NaN()** - Note that JavaScript doesn't correctly treat all undefined forms as `NaN` (e.g., `1/0` and `0**0`).  
+**is.number()** - A real number.  
+**is.infinite()** \*  
+**is.nan()** \*  
+
+\* Note that JavaScript doesn't correctly treat all undefined forms as `NaN`. For example, `1/0` and `0**0` are undefined forms, but JavaScript treats them as `Infinity`.  
 
 **is.bigint()**  
 **is.boolean()**  
