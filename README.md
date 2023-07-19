@@ -1,87 +1,195 @@
 # Improved JavaScript Type Testing
-A robust alternative to JavaScript's `typeof` keyword.
 
-This is a JavaScript module that exports: [`is`](#is) (default)
+A robust alternative to JavaScript's built-in type testing.
+
 
 ---
 
 
-## Get the type
+## Type Names
 
-### is()
+This module uses an expanded set of type names that make no distinction between primitive values and objects. 
+For example, `5` and `new String(5)` are both of type "number".  
 
-The **is()** function determines the type of its argument and returns a [Type](#the-type-class) object.
+| Type Name             | Values
+| - | -
+| array                 | `Array` objects
+| bigint                | _bigint_ primitives
+| boolean               | `false`, `true`, `Boolean` objects
+| date                  | `Date` objects
+| error                 | `Error` objects
+| function              | `Function` objects
+| map                   | `Map` objects
+| nan                   | `NaN`
+| null                  | `null`
+| number                | _number_ primitives, `Number` objects; excludes `NaN`
+| object                | instances of `Object` that don't match another type in this list
+| promise               | `Promise` objects
+| regex                 | `RegExp` objects
+| set                   | `Set` objects
+| string                | _string_ primitives, `String` objects
+| symbol                | _symbol_ primitives
+| undefined             | `undefined`
+| weakmap               | `WeakMap` objects
+| weakset               | `WeakSet` objects
+
+## Determine a Type
+
+The **is()** function returns an object describing the type of its argument.
 
 Syntax:
-> `is(value)`
+> **is**(_value_)
 
-Parameters:
-- ***value*** - The value to determine the type of.
+Returned object:
+| Property              | Description
+| - | -
+| .**type**             | The type name used by this module.
+| .**typeof**           | The value returned by the `typeof` operator.
+| .**toStringTag**      | The name used by `Object.prototype.toString()`.
+| .**constructorName**  | The name of the argument's constructor, or `undefined`.
+| .**isObject**         | True if the value is an object.
+| .**isPrimitive**      | True if the value is a primitive.
 
-Return value:
-- A [Type](#the-type-class) object.
-
-### The Type class
-
-A String object storing a primitive type, with the following additional properties.
-
-| Property        | Type   | Description
-| - | - | -
-| .**type**       | string | The type name returned by the `typeof` operator.
-| .**objectType** | string | The object name used by `Object.prototype.toString()`. Undefined for primitive types.
-| .**primitive**  | string | True for primitive types.
-| .**object**     | string | True for object types.
-
-### Example
+<details>
+<summary>Examples</summary>
 
 ```
-is(2).type;	// "number"
-is(2).toString()	// "number"
-is(2) == "number";	//true
-is(2).primitive;	// true
-is(2).object;	// undefined
-is(2).objectType;	// undefined
+let v;
+is(v).type             // "undefined"
+is(v).typeof           // "undefined"
+is(v).toStringTag      // "Undefined"
+is(v).constructorName  // undefined
 
-let o = new Number(2);
-is(o).type;	// "number"
-is(o).toString()	// "number"
-is(o) == "number";	//true
-is(o).primitive;	// undefined
-is(o).object;	// true
-is(o).objectType;	// "Number"
+v = null;
+is(v).type             // "null"
+is(v).typeof           // "object"
+is(v).toStringTag      // "Null"
+is(v).constructorName  // undefined
+
+v = NaN;
+is(v).type             // "nan"
+is(v).typeof           // "number"
+is(v).toStringTag      // "Number"
+is(v).constructorName  // "Number"
+
+v = 42;
+is(v).type             // "number"
+is(v).typeof           // "number"
+is(v).toStringTag      // "Number"
+is(v).constructorName  // "Number"
+
+v = new Number(42);
+is(v).type             // "number"
+is(v).typeof           // "object"
+is(v).toStringTag      // "Number"
+is(v).constructorName  // "Number"
+
+v = [];
+is(v).type             // "array"
+is(v).typeof           // "object"
+is(v).toStringTag      // "Array"
+is(v).constructorName  // "Array"
+
+v = ()=>{};
+is(v).type             // "function"
+is(v).typeof           // "function"
+is(v).toStringTag      // "Function"
+is(v).constructorName  // "Function"
+
+class Foo {}
+v = new Foo();
+is(v).type             // "object"
+is(v).typeof           // "object"
+is(v).toStringTag      // "Object"
+is(v).constructorName  // "Foo"
+
+class Bar {
+    get [Symbol.toStringTag](){ return "Foobar"; }
+}
+v = new Bar();
+is(v).type             // "object"
+is(v).typeof           // "object"
+is(v).toStringTag      // "Foobar"
+is(v).constructorName  // "Bar"
 ```
 
----
+</details>
 
 
-## Test for a type
+## Type Testing
 
-For each of the type-testing methods, the only parameter is the item to be tested. The return value is a boolean.
+Each of the type-testing methods return a boolean indicating if the argument is of that type.
 
-**is.object()**  
-**is.primitive()**  
+Syntax:
+> is._typeTester_(_value_)
 
-**is.undefined()**  
-**is.null()**  
+### Basics
 
-**is.number()** - A real number.  
-**is.infinite()** \*  
-**is.nan()** \*  
+| Method              | Tests for
+| - | -
+| is.**function**()   | instance of `Function`
+| is.**object**()     | instance of `Object`
+| is.**primitive**()  | primitives
+| is.**null**()       | `null`
+| is.**nullish**()    | `undefined`, `null`
+| is.**undefined**()  | `undefined`
+| is.**defined**()    | not `undefined`
 
-\* Note that JavaScript doesn't correctly treat all undefined forms as `NaN`. For example, `1/0` and `0**0` are undefined forms, but JavaScript treats them as `Infinity`.  
+### Booleans
 
-**is.bigint()**  
-**is.boolean()**  
-**is.string()**  
-**is.symbol()**  
-**is.function()**  
+| Method              | Tests for
+| - | -
+| is.**boolean**()    | `false`, `true`, instance of `Boolean`
+| is.**falsy**()      | `false`, `undefined`, `null`, `NaN`, `0`, `-0`, `0n`, `""`, [`document.all`](https://developer.mozilla.org/en-US/docs/Web/API/Document/all#conversion_to_boolean)
+| is.**truthy**()     | not falsy
 
-**is.array()**  
-**is.date()**  
-**is.error()**  
-**is.regexp()**  
-**is.map()**  
-**is.set()**  
-**is.weakmap()**  
-**is.weakset()**  
-**is.promise()**  
+### Numbers
+
+| Method              | Tests for
+| - | -
+| is.**bigint**()     | _bigint_ primitive
+| is.**date**()       | instance of `Date`
+| is.**numberish**()  | _number_ primitive, instance of `Number`
+
+_Numberish_ values can be more explicitly tested using the following methods:  
+
+| Method              | Tests for
+| - | -
+| is.**real**()       | real numbers
+| is.**infinite**()   | `Infinity`, `-Infinity`
+| is.**number**()     | real numbers, `Infinity`, `-Infinity`
+| is.**nan**()        | `NaN`
+
+Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.  
+
+### Text
+
+| Method              | Tests for
+| - | -
+| is.**regex**()      | instance of `RegExp`
+| is.**string**()     | _string_ primitive, instance of `String`
+
+### Collections
+
+| Method              | Tests for
+| - | -
+| is.**array**()      | instance of `Array`
+| is.**map**()        | instance of `Map`
+| is.**set**()        | instance of `Set`
+| is.**weakmap**()    | instance of `WeakMap`
+| is.**weakset**()    | instance of `WeakSet`
+
+### Other Common Types
+
+| Method              | Tests for
+| - | -
+| is.**error**()      | instance of `Error`
+| is.**promise**()    | instance of `Promise`
+| is.**symbol**()     | _symbol_ primitive
+
+## Additional Methods
+
+| Method                       | Description
+| - | -
+| is.**empty**(_value_)        | Tests if an object's `.length` or `.size` property equals zero.
+| is.**of**(_value_, _class_)  | Tests if _value_ is an instance of _class_. (Same as using the `instanceof` operator.)
