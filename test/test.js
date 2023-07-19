@@ -1,139 +1,164 @@
-import is from "../isType.mjs";
+import is from "../isType.mjs.js";
 
 
-class Number2 extends Number { constructor(val){ super(val); } }
-class Number3 extends Number { constructor(val){ super(val); this[Symbol.toStringTag] = "Number3"; } }
-
-let i;
-
-console.group("is()");
-	i = 1;
+function _is(value, pseudocode, _type, _typeof, _toStringTag, _constructorName){
 	
-	try{
-		const t = is(nonExistentVar);
-		console.assert(false, `${i++}. ${t} (should have thrown a ReferenceError)`);
-	}catch(e){
-		if(!(e instanceof ReferenceError))
-			console.assert(false, `${i++}. threw a ${Object.prototype.toString.call(e).slice(8,-1)} (should have thrown a ReferenceError)`);
+	const type = is(value);
+	
+	const tbody = document.getElementById("type_results");
+	const tr = document.createElement("tr");
+	tr.innerHTML = `<td>${pseudocode}</td>`;
+	createCell(type.type, _type);
+	createCell(type.typeof, _typeof);
+	createCell(type.toStringTag, _toStringTag);
+	createCell(type.constructorName, _constructorName);
+	tbody.appendChild(tr);
+	
+	function createCell(actual, expected){
+		const td = document.createElement("td");
+		td.dataset.expected = expected === void 0 ? "undefined" : `"${expected}"`;
+		td.innerHTML = actual === void 0 ? `<i>undefined</i>` : `"${actual}"`;
+		if(actual !== expected) td.classList.add("fail");
+		tr.appendChild(td);
 	}
-	
-	function testIs(result, expectedType, expectedObjectType){
-		console.assert(result.type === expectedType && result.objectType === expectedObjectType,
-			`${i++}. ${result.type}/${result.objectType} !== ${expectedType}/${expectedObjectType}`);
-	}
-	
-	testIs(is({}), "object", "Object");
-	testIs(is(new Object()), "object", "Object");
-	
-	testIs(is(), "undefined");
-	testIs(is(null), "null");
-	
-	testIs(is(5), "number");
-	testIs(is(new Number(5)), "number", "Number");
-	testIs(is(1/0), "number");
-	testIs(is(new Number(1/0)), "number", "Number");
-	testIs(is(NaN), "number");
-	testIs(is(new Number(NaN)), "number", "Number");
-	testIs(is(new Number2(5)), "number", "Number");
-	testIs(is(new Number3(5)), "number", "Number3");
-	
-	testIs(is(BigInt(5)), "bigint");
-	testIs(is(false), "boolean");
-	testIs(is(new Boolean()), "boolean", "Boolean");
-	testIs(is(""), "string");
-	testIs(is(new String("")), "string", "String");
-	testIs(is(Symbol()), "symbol");
-	testIs(is(function(){}), "function", "Function");
-	testIs(is(new Function()), "function", "Function");
-	testIs(is(()=>{}), "function", "Function");
-	testIs(is(function*(){}), "function", "Function");
-	
-	testIs(is([]), "object", "Array");
-	testIs(is(new Array()), "object", "Array");
-	testIs(is(new Date()), "object", "Date");
-	testIs(is(new Error()), "object", "Error");
-	testIs(is(new ReferenceError()), "object", "Error");
-	testIs(is(/a/), "object", "RegExp");
-	testIs(is(new RegExp("a")), "object", "RegExp");
-	
-	(function (){
-		testIs(is(arguments), "object", "Arguments");
-	})();
-	
-console.groupEnd();
+}
 
-console.group("is.___()");
-	i = 1;
-	function testIsType(result, expected){
-		console.assert(result === expected, `${i++}. ${result} !== ${expected}`);
+{
+	_is([], "[]", "array", "object", "Array", "Array");
+	_is(new Array(), "new Array()", "array", "object", "Array", "Array");
+	_is(5n, "5n", "bigint", "bigint");
+	_is(true, "true", "boolean", "boolean");
+	_is(false, "false", "boolean", "boolean");
+	_is(new Boolean(), "new Boolean()", "boolean", "object", "Boolean", "Boolean");
+	_is(new Date(), "new Date()", "date", "object", "Date", "Date");
+	_is(new Error(), "new Error()", "error", "object", "Error", "Error");
+	_is(new TypeError(), "new TypeError()", "error", "object", "Error", "TypeError");
+	_is(()=>{}, "()=>{}", "function", "function", "Function", "Function");
+	_is(Object, "Object", "function", "function", "Function", "Function");
+	_is(new Map(), "new Map()", "map", "object", "Map", "Map");
+	_is(NaN, "NaN", "nan", "number");
+	_is(new Number(NaN), "new Number(NaN)", "nan", "object", "Number", "Number");
+	_is(new Number('a'), "new Number('a')", "nan", "object", "Number", "Number");
+	_is(null, "null", "null", "object");
+	_is(5, "5", "number", "number");
+	_is(Infinity, "Infinity", "number", "number");
+	_is(new Number(), "new Number()", "number", "object", "Number", "Number");
+	_is({}, "{}", "object", "object", "Object", "Object");
+	_is(new Object(), "new Object()", "object", "object", "Object", "Object");
+	_is(new Promise(()=>{}), "new Promise(()=>{})", "promise", "object", "Promise", "Promise");
+	_is(/a/, "/a/", "regex", "object", "RegExp", "RegExp");
+	_is(new RegExp(), "new RegExp()", "regex", "object", "RegExp", "RegExp");
+	_is(new Set(), "new Set()", "set", "object", "Set", "Set");
+	_is("", '""', "string", "string");
+	_is("a", '"a"', "string", "string");
+	_is(new String(), "new String()", "string", "object", "String", "String");
+	_is(Symbol(), "Symbol()", "symbol", "symbol");
+	_is(void 0, "void 0", "undefined", "undefined");
+	_is(new WeakMap(), "new WeakMap()", "weakmap", "object", "WeakMap", "WeakMap");
+	_is(new WeakSet(), "new WeakSet()", "weakset", "object", "WeakSet", "WeakSet");
+	{
+		class Foo {}
+		_is(new Foo(), "<i>class Foo {}</i><br>new Foo()", "object", "object", "Object", "Foo");
 	}
+	{
+		class Foo extends String {}
+		_is(new Foo(), "<i>class Foo extends String {}</i><br>new Foo()", "string", "object", "String", "Foo");
+	}
+	{
+		class Foo { get [Symbol.toStringTag](){ return "Bar"; } }
+		_is(new Foo(), "<i>class Foo { get [Symbol.toStringTag](){ return \"Bar\"; } }</i><br>new Foo()", "object", "object", "Bar", "Foo");
+	}
+}
+
+
+function _tester(value, pseudocode, _testerNames){
 	
-	testIsType(is.undefined(), true);
-	testIsType(is.undefined(5), false);
-	testIsType(is.null(null), true);
-	testIsType(is.null(5), false);
+	const testers = [
+		"array",
+		"bigint",
+		"boolean",
+		"date",
+		"defined",
+		"error",
+		"falsy",
+		"function",
+		"infinite",
+		"map",
+		"nan",
+		"null",
+		"nullish",
+		"number",
+		"numberish",
+		"object",
+		"primitive",
+		"promise",
+		"real",
+		"regex",
+		"set",
+		"string",
+		"symbol",
+		"truthy",
+		"undefined",
+		"weakmap",
+		"weakset",
+	];
 	
-	testIsType(is.number(5), true);
-	testIsType(is.number(new Number()), true);
-	testIsType(is.number(1/0), false);
-	testIsType(is.number(NaN), false);
-	testIsType(is.number("5"), false);
-	testIsType(is.infinite(1/0), true);
-	testIsType(is.infinite(new Number(1/0)), true);
-	testIsType(is.infinite(5), false);
-	testIsType(is.infinite(NaN), false);
-	testIsType(is.infinite("Infinity"), false);
-	testIsType(is.nan(NaN), true);
-	testIsType(is.nan(new Number(NaN)), true);
-	testIsType(is.nan(5), false);
-	testIsType(is.nan(1/0), false);
-	testIsType(is.nan("NaN"), false);
-	testIsType(is.number(""), false);
-	testIsType(is.number(new Date()), false);
-	testIsType(is.number(1*(new Date())), true);
-	testIsType(is.number(new Number2()), true);
-	testIsType(is.number(new Number3()), true);
+	const tbody = document.getElementById("tester_results");
+	const tr = document.createElement("tr");
+	tr.innerHTML = `<td>${pseudocode}</td>`;
+	const matches = [];
+	for(const tester of testers){
+		const match = is[tester](value);
+		if(match) matches.push(tester);
+	}
+	createCell(matches.join(", "), _testerNames.sort().join(", "));
+	tbody.appendChild(tr);
 	
-	testIsType(is.bigint(5n), true);
-	testIsType(is.bigint(BigInt(5)), true);
-	testIsType(is.bigint(5), false);
-	testIsType(is.boolean(false), true);
-	testIsType(is.boolean(true), true);
-	testIsType(is.boolean(5), false);
-	testIsType(is.string(""), true);
-	testIsType(is.string(new String()), true);
-	testIsType(is.string(5), false);
-	testIsType(is.symbol(Symbol.toStringTag), true);
-	testIsType(is.symbol(Symbol()), true);
-	testIsType(is.symbol(5), false);
-	testIsType(is.function(function(){}), true);
-	testIsType(is.function(new Function()), true);
-	testIsType(is.function(()=>{}), true);
-	testIsType(is.function(function*(){}), true);
-	testIsType(is.function(5), false);
-	
-	testIsType(is.array([]), true);
-	testIsType(is.array(new Array()), true);
-	(function (){
-		testIsType(is.array(arguments), false);
-	})();
-	testIsType(is.date(new Date()), true);
-	testIsType(is.date(1*(new Date())), false);
-	testIsType(is.error(new Error()), true);
-	testIsType(is.error(new ReferenceError()), true);
-	testIsType(is.regexp(/a/), true);
-	testIsType(is.regexp(new RegExp("a")), true);
-	
-	testIsType(is.object({}), true);
-	testIsType(is.object(5), false);
-	testIsType(is.object(new Number()), true);
-	testIsType(is.object(function(){}), true);
-	testIsType(is.object([]), true);
-	testIsType(is.primitive(), true);
-	testIsType(is.primitive(5), true);
-	testIsType(is.primitive(new Number()), false);
-	testIsType(is.primitive(NaN), true);
-	testIsType(is.primitive(new Number(NaN)), false);
-	testIsType(is.primitive([]), false);
-	
-console.groupEnd();
+	function createCell(actual, expected){
+		const td = document.createElement("td");
+		td.dataset.expected = expected;
+		td.innerHTML = actual;
+		if(actual !== expected) td.classList.add("fail");
+		tr.appendChild(td);
+	}
+}
+
+{
+	_tester([], "[]", ["array", "object", "defined", "truthy"]);
+	_tester(new Array(), "new Array()", ["array", "object", "defined", "truthy"]);
+	_tester(5n, "5n", ["bigint", "primitive", "defined", "truthy"]);
+	_tester(0n, "0n", ["bigint", "primitive", "defined", "falsy"]);
+	_tester(true, "true", ["boolean", "primitive", "defined", "truthy"]);
+	_tester(false, "false", ["boolean", "primitive", "defined", "falsy"]);
+	_tester(new Boolean(), "new Boolean()", ["boolean", "object", "defined", "truthy"]);
+	_tester(new Date(), "new Date()", ["date", "object", "defined", "truthy"]);
+	_tester(new Error(), "new Error()", ["error", "object", "defined", "truthy"]);
+	_tester(new TypeError(), "new TypeError()", ["error", "object", "defined", "truthy"]);
+	_tester(()=>{}, "()=>{}", ["function", "object", "defined", "truthy"]);
+	_tester(Object, "Object", ["function", "object", "defined", "truthy"]);
+	_tester(new Map(), "new Map()", ["map", "object", "defined", "truthy"]);
+	_tester(NaN, "NaN", ["nan", "numberish", "primitive", "defined", "falsy"]);
+	_tester(new Number(NaN), "new Number(NaN)", ["nan", "numberish", "object", "defined", "truthy"]);
+	_tester(new Number('a'), "new Number('a')", ["nan", "numberish", "object", "defined", "truthy"]);
+	_tester(null, "null", ["null", "nullish", "primitive", "defined", "falsy"]);
+	_tester(5, "5", ["number", "numberish", "real", "primitive", "defined", "truthy"]);
+	_tester(0, "0", ["number", "numberish", "real", "primitive", "defined", "falsy"]);
+	_tester(-0, "-0", ["number", "numberish", "real", "primitive", "defined", "falsy"]);
+	_tester(Infinity, "Infinity", ["number", "infinite", "numberish", "primitive", "defined", "truthy"]);
+	_tester(new Number(5), "new Number(5)", ["number", "numberish", "real", "object", "defined", "truthy"]);
+	_tester(new Number(0), "new Number(0)", ["number", "numberish", "real", "object", "defined", "truthy"]);
+	_tester({}, "{}", ["object", "defined", "truthy"]);
+	_tester(new Object(), "new Object()", ["object", "defined", "truthy"]);
+	_tester(new Promise(()=>{}), "new Promise(()=>{})", ["promise", "object", "defined", "truthy"]);
+	_tester(/a/, "/a/", ["regex", "object", "defined", "truthy"]);
+	_tester(new RegExp(), "new RegExp()", ["regex", "object", "defined", "truthy"]);
+	_tester(new Set(), "new Set()", ["set", "object", "defined", "truthy"]);
+	_tester("", '""', ["string", "primitive", "defined", "falsy"]);
+	_tester("a", '"a"', ["string", "primitive", "defined", "truthy"]);
+	_tester(new String(), "new String()", ["string", "object", "defined", "truthy"]);
+	_tester(Symbol(), "Symbol()", ["symbol", "primitive", "defined", "truthy"]);
+	_tester(void 0, "void 0", ["undefined", "nullish", "primitive", "falsy"]);
+	_tester(new WeakMap(), "new WeakMap()", ["weakmap", "object", "defined", "truthy"]);
+	_tester(new WeakSet(), "new WeakSet()", ["weakset", "object", "defined", "truthy"]);
+	_tester(document.all, "document.all", ["object", "nullish", "undefined", "falsy"]);
+}

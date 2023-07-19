@@ -113,7 +113,7 @@ function is(value){
 	
 	if(value === null)
 		typeName = "null";
-	else if(Number.isNaN(value))
+	else if(Number.isNaN(value) || (value instanceof Number && Number.isNaN(value.valueOf())))
 		typeName = "nan";
 	else if(!["object", "function"].includes(typeofType))
 		typeName = typeofType;
@@ -134,7 +134,7 @@ function is(value){
 
 // Create type testers.
 
-for(const name in TYPE_NAMES){
+for(const name of TYPE_NAMES){
 	is[name] = (v)=> is(v).type === name;
 }
 
@@ -148,8 +148,8 @@ is.falsy = (v)=> !v;
 is.truthy = (v)=> !!v;
 
 is.numberish = (v)=> (is.number(v) || is.nan(v));
-is.real = (v)=> (is.number(v) && Number.isFinite(v));
-is.infinite = (v)=> (is.number(v) && !Number.isFinite(v));
+is.real = (v)=> (is.number(v) && Number.isFinite(v instanceof Number ? v.valueOf() : v));
+is.infinite = (v)=> (is.number(v) && !Number.isFinite(v instanceof Number ? v.valueOf() : v));
 
 
 
