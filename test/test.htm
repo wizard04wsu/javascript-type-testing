@@ -1,5 +1,72 @@
-<html><head><title>isType test</title><script src="test.js" type="module"></script></head><body>
+<html lang="en-US">
+<head>
+	<title>isType tests</title>
 	
-	View the console.
+	<style>
+		table {
+			border-collapse: collapse;
+			margin: 1.25em;
+		}
+		th, td {
+			border: 1px solid #000;
+			padding: 0.25em 0.5em;
+			vertical-align: top;
+		}
+		td.fail {
+			background-color: #FEE;
+		}
+		td.fail::after {
+			content: "(expected " attr(data-expected) ")";
+			display: block;
+			color: #888;
+		}
+	</style>
 	
-</body></html>
+	<script src="test.js" type="module"></script>
+</head>
+<body>
+	
+	<details><summary>Types</summary>
+		<table>
+			<thead>
+				<tr>
+					<th rowspan="2">Value</th>
+					<th colspan="4">Type</th>
+				</tr>
+				<tr>
+					<th>.type</th>
+					<th>.typeof</th>
+					<th>.toStringTag</th>
+					<th>.constructorName</th>
+				</tr>
+			</thead>
+			<tbody id="type_results"></tbody>
+		</table>
+	</details>
+	
+	<details><summary>Type Tester Methods</summary>
+		<table>
+			<thead>
+				<tr>
+					<th>Value</th>
+					<th>Successful Type Tester Methods</th>
+				</tr>
+			</thead>
+			<tbody id="tester_results"></tbody>
+		</table>
+	</details>
+	
+	<details><summary>Additional Methods</summary>
+		<table>
+			<thead>
+				<tr>
+					<th>Test</th>
+					<th>Result</th>
+				</tr>
+			</thead>
+			<tbody id="additional_results"></tbody>
+		</table>
+	</details>
+	
+</body>
+</html>
