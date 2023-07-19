@@ -11,7 +11,7 @@ See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/t
 ## Type Names
 
 This module uses an expanded set of type names that make no distinction between primitive values and objects. 
-For example, `5` and `new Number(5)` are both of type "number".  
+For example, `5` and `new Number(5)` are both of type "number".
 
 | Type Name             | Values
 | - | -
@@ -22,9 +22,9 @@ For example, `5` and `new Number(5)` are both of type "number".
 | error                 | `Error` objects
 | function              | `Function` objects
 | map                   | `Map` objects
-| nan                   | `NaN`
+| nan                   | `NaN`, `Number` objects with value `NaN`
 | null                  | `null`
-| number                | _number_ primitives, `Number` objects; excludes `NaN`
+| number                | _number_ primitives, `Number` objects; excludes `NaN` values
 | object                | instances of `Object` that don't match another type in this list
 | promise               | `Promise` objects
 | regex                 | `RegExp` objects
