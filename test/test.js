@@ -162,3 +162,32 @@ function _tester(value, pseudocode, _testerNames){
 	_tester(new WeakSet(), "new WeakSet()", ["weakset", "object", "defined", "truthy"]);
 	_tester(document.all, "document.all", ["object", "nullish", "undefined", "falsy"]);
 }
+
+
+function _more(test, pseudocode, _result){
+	
+	const tbody = document.getElementById("additional_results");
+	const tr = document.createElement("tr");
+	tr.innerHTML = `<td>${pseudocode}</td>`;
+	createCell(test, _result);
+	tbody.appendChild(tr);
+	
+	function createCell(actual, expected){
+		const td = document.createElement("td");
+		td.dataset.expected = expected;
+		td.innerHTML = actual;
+		if(actual !== expected) td.classList.add("fail");
+		tr.appendChild(td);
+	}
+}
+
+{
+	_more(is.empty(""), 'is.empty("")', true);
+	_more(is.empty("a"), 'is.empty("a")', false);
+	_more(is.empty([]), "is.empty([])", true);
+	_more(is.empty([5]), "is.empty([5])", false);
+	_more(is.empty(new Map()), "is.empty(new Map())", true);
+	_more(is.empty(new Map([[1, "one"]])), 'is.empty(new Map([[1, "one"]]))', false);
+	_more(is.of(5, Number), "is.of(5, Number)", false);
+	_more(is.of(new Number(5), Number), "is.of(new Number(5), Number)", true);
+}

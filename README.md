@@ -2,6 +2,8 @@
 
 A robust alternative to JavaScript's built-in type testing.
 
+See the test page for examples.
+
 
 ---
 
@@ -9,7 +11,7 @@ A robust alternative to JavaScript's built-in type testing.
 ## Type Names
 
 This module uses an expanded set of type names that make no distinction between primitive values and objects. 
-For example, `5` and `new String(5)` are both of type "number".  
+For example, `5` and `new Number(5)` are both of type "number".  
 
 | Type Name             | Values
 | - | -
@@ -33,6 +35,7 @@ For example, `5` and `new String(5)` are both of type "number".
 | weakmap               | `WeakMap` objects
 | weakset               | `WeakSet` objects
 
+
 ## Determine a Type
 
 The **is()** function returns an object describing the type of its argument.
@@ -45,75 +48,10 @@ Returned object:
 | - | -
 | .**type**             | The type name used by this module.
 | .**typeof**           | The value returned by the `typeof` operator.
-| .**toStringTag**      | The name used by `Object.prototype.toString()`.
-| .**constructorName**  | The name of the argument's constructor, or `undefined`.
+| .**toStringTag**      | The name used by `Object.prototype.toString()`. `undefined` for primitives.
+| .**constructorName**  | The name of the argument's constructor. `undefined` for primitives.
 | .**isObject**         | True if the value is an object.
 | .**isPrimitive**      | True if the value is a primitive.
-
-<details>
-<summary>Examples</summary>
-
-```
-let v;
-is(v).type             // "undefined"
-is(v).typeof           // "undefined"
-is(v).toStringTag      // "Undefined"
-is(v).constructorName  // undefined
-
-v = null;
-is(v).type             // "null"
-is(v).typeof           // "object"
-is(v).toStringTag      // "Null"
-is(v).constructorName  // undefined
-
-v = NaN;
-is(v).type             // "nan"
-is(v).typeof           // "number"
-is(v).toStringTag      // "Number"
-is(v).constructorName  // "Number"
-
-v = 42;
-is(v).type             // "number"
-is(v).typeof           // "number"
-is(v).toStringTag      // "Number"
-is(v).constructorName  // "Number"
-
-v = new Number(42);
-is(v).type             // "number"
-is(v).typeof           // "object"
-is(v).toStringTag      // "Number"
-is(v).constructorName  // "Number"
-
-v = [];
-is(v).type             // "array"
-is(v).typeof           // "object"
-is(v).toStringTag      // "Array"
-is(v).constructorName  // "Array"
-
-v = ()=>{};
-is(v).type             // "function"
-is(v).typeof           // "function"
-is(v).toStringTag      // "Function"
-is(v).constructorName  // "Function"
-
-class Foo {}
-v = new Foo();
-is(v).type             // "object"
-is(v).typeof           // "object"
-is(v).toStringTag      // "Object"
-is(v).constructorName  // "Foo"
-
-class Bar {
-    get [Symbol.toStringTag](){ return "Foobar"; }
-}
-v = new Bar();
-is(v).type             // "object"
-is(v).typeof           // "object"
-is(v).toStringTag      // "Foobar"
-is(v).constructorName  // "Bar"
-```
-
-</details>
 
 
 ## Type Testing
@@ -151,7 +89,7 @@ Syntax:
 | is.**date**()       | instance of `Date`
 | is.**numberish**()  | _number_ primitive, instance of `Number`
 
-_Numberish_ values can be more explicitly tested using the following methods:  
+_Numberish_ values can be more explicitly tested using the following methods:
 
 | Method              | Tests for
 | - | -
@@ -160,7 +98,7 @@ _Numberish_ values can be more explicitly tested using the following methods:
 | is.**number**()     | real numbers, `Infinity`, `-Infinity`
 | is.**nan**()        | `NaN`
 
-Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.  
+Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.
 
 ### Text
 
@@ -186,6 +124,7 @@ Note that JavaScript doesn't always treat mathematical expressions of undefined 
 | is.**error**()      | instance of `Error`
 | is.**promise**()    | instance of `Promise`
 | is.**symbol**()     | _symbol_ primitive
+
 
 ## Additional Methods
 
