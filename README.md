@@ -2,7 +2,7 @@
 
 A robust alternative to JavaScript's built-in type testing.
 
-See the test page for examples.
+See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/test.htm) for examples.
 
 
 ---
