@@ -130,5 +130,5 @@ Note that JavaScript doesn't always treat mathematical expressions of undefined 
 
 | Method                       | Description
 | - | -
-| is.**empty**(_value_)        | Tests if an object's `.length` or `.size` property equals zero.
+| is.**empty**(_value_)        | Tests for an empty _string_ primitive or if an object's `.length` or `.size` property equals zero.
 | is.**of**(_value_, _class_)  | Tests if _value_ is an instance of _class_. (Same as using the `instanceof` operator.)
