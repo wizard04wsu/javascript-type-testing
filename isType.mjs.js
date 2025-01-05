@@ -23,6 +23,39 @@ const TYPES = {
 	weakset:   {                         class: WeakSet  },
 };
 
+const TYPE_TEST_PROPERTY_NAMES = [
+	"array",
+	"bigint",
+	"boolean",
+	"date",
+	"defined",
+	"empty",
+	"error",
+	"falsy",
+	"function",
+	"infinite",
+	"map",
+	"nan",
+	"nonempty",
+	"null",
+	"nullish",
+	"number",
+	"numberish",
+	"object",
+	"objectish",
+	"primitive",
+	"promise",
+	"real",
+	"regex",
+	"set",
+	"string",
+	"symbol",
+	"truthy",
+	"undefined",
+	"weakmap",
+	"weakset"
+];
+
 /**
  * A collection of boolean properties indicating the type of the given value.
  * @class TypeTest
@@ -103,10 +136,21 @@ class TypeTest {
 /**
  * Determine the type of a value. The returned object includes boolean properties to quickly test against specific types or for specific states (e.g., 'empty').
  * @param {*} value - The value to be tested.
- * @returns {TypeTest}
+ * @returns {TypeTest} - Plus methods `all` and `any`.
  */
 function is(value){
-	return new TypeTest(value);
+	
+	const typeTest = new TypeTest(value);
+	
+	const tester = (propName)=>typeTest[propName];
+	typeTest.all = (...propNames)=>propNames.every(tester);
+	typeTest.any = (...propNames)=>propNames.some(tester);
+	
+	return typeTest;
 }
+
+TYPE_TEST_PROPERTY_NAMES.forEach((propName)=>{
+	is[propName] = propName;
+});
 
 export { is as default };
