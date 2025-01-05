@@ -1,76 +1,84 @@
 import is from "../isType.mjs.js";
 
 
-function _is(value, pseudocode, _type, _typeof, _toStringTag, _constructorName){
+function _is(value, pseudocodeHTML, expectedType, expectedIsObject){
 	
-	const type = is(value);
+	const actualType = is(value);
+	//console.log(actualType);
 	
 	const tbody = document.getElementById("type_results");
 	const tr = document.createElement("tr");
-	tr.innerHTML = `<td>${pseudocode}</td>`;
-	createCell(type.type, _type);
-	createCell(type.typeof, _typeof);
-	createCell(type.toStringTag, _toStringTag);
-	createCell(type.constructorName, _constructorName);
+	tr.innerHTML = `<td>${pseudocodeHTML}</td>`;
+	createCell(actualType, expectedType);
 	tbody.appendChild(tr);
+	createCell(actualType.object, expectedIsObject);
+	tbody.appendChild(tr);
+	
+	let props = "";
+	for(const name in actualType){
+		if(actualType[name]) props += `, ${name}`;
+	}
+	tr.innerHTML += `<td>${props.slice(2)}</td>`;
 	
 	function createCell(actual, expected){
 		const td = document.createElement("td");
-		td.dataset.expected = expected === void 0 ? "undefined" : `"${expected}"`;
-		td.innerHTML = actual === void 0 ? `<i>undefined</i>` : `"${actual}"`;
-		if(actual !== expected) td.classList.add("fail");
+		td.dataset.expected = expected === void 0 ? "undefined" : expected;
+		td.innerHTML = actual === void 0 ? `<i>undefined</i>` : actual.toString() === "" ? `<i>empty string</i>` : actual;
+		if(actual != expected) td.classList.add("fail");
 		tr.appendChild(td);
 	}
 }
 
 {
-	_is([], "[]", "array", "object", "Array", "Array");
-	_is(new Array(), "new Array()", "array", "object", "Array", "Array");
-	_is(5n, "5n", "bigint", "bigint");
-	_is(true, "true", "boolean", "boolean");
-	_is(false, "false", "boolean", "boolean");
-	_is(new Boolean(), "new Boolean()", "boolean", "object", "Boolean", "Boolean");
-	_is(new Date(), "new Date()", "date", "object", "Date", "Date");
-	_is(new Error(), "new Error()", "error", "object", "Error", "Error");
-	_is(new TypeError(), "new TypeError()", "error", "object", "Error", "TypeError");
-	_is(()=>{}, "()=>{}", "function", "function", "Function", "Function");
-	_is(Object, "Object", "function", "function", "Function", "Function");
-	_is(new Map(), "new Map()", "map", "object", "Map", "Map");
-	_is(NaN, "NaN", "nan", "number");
-	_is(new Number(NaN), "new Number(NaN)", "nan", "object", "Number", "Number");
-	_is(new Number('a'), "new Number('a')", "nan", "object", "Number", "Number");
-	_is(null, "null", "null", "object");
-	_is(5, "5", "number", "number");
-	_is(Infinity, "Infinity", "number", "number");
-	_is(new Number(), "new Number()", "number", "object", "Number", "Number");
-	_is({}, "{}", "object", "object", "Object", "Object");
-	_is(new Object(), "new Object()", "object", "object", "Object", "Object");
-	_is(new Promise(()=>{}), "new Promise(()=>{})", "promise", "object", "Promise", "Promise");
-	_is(/a/, "/a/", "regex", "object", "RegExp", "RegExp");
-	_is(new RegExp(), "new RegExp()", "regex", "object", "RegExp", "RegExp");
-	_is(new Set(), "new Set()", "set", "object", "Set", "Set");
-	_is("", '""', "string", "string");
-	_is("a", '"a"', "string", "string");
-	_is(new String(), "new String()", "string", "object", "String", "String");
-	_is(Symbol(), "Symbol()", "symbol", "symbol");
-	_is(void 0, "void 0", "undefined", "undefined");
-	_is(new WeakMap(), "new WeakMap()", "weakmap", "object", "WeakMap", "WeakMap");
-	_is(new WeakSet(), "new WeakSet()", "weakset", "object", "WeakSet", "WeakSet");
+	_is([], "[]", "array", true);
+	_is(new Array(), "new Array()", "array", true);
+	_is([1,2], "[1,2]", "array", true);
+	_is(new Array(1,2), "new Array(1,2)", "array", true);
+	_is(5n, "5n", "bigint", false);
+	_is(true, "true", "boolean", false);
+	_is(false, "false", "boolean", false);
+	_is(new Boolean(), "new Boolean()", "object", true);
+	_is(new Date(), "new Date()", "date", true);
+	_is(new Error(), "new Error()", "error", true);
+	_is(new TypeError(), "new TypeError()", "error", true);
+	_is(()=>{}, "()=>{}", "function", true);
+	_is(Object, "Object", "function", true);
+	_is(new Map(), "new Map()", "map", true);
+	_is(NaN, "NaN", "nan", false);
+	_is(new Number(NaN), "new Number(NaN)", "nan", true);
+	_is(new Number('a'), "new Number('a')", "nan", true);
+	_is(null, "null", "null", false);
+	_is(5, "5", "number", false);
+	_is(Infinity, "Infinity", "number", false);
+	_is(new Number(), "new Number()", "number", true);
+	_is({}, "{}", "object", true);
+	_is(new Object(), "new Object()", "object", true);
+	_is(new Promise(()=>{}), "new Promise(()=>{})", "promise", true);
+	_is(/a/, "/a/", "regex", true);
+	_is(new RegExp(), "new RegExp()", "regex", true);
+	_is(new Set(), "new Set()", "set", true);
+	_is("", '""', "string", false);
+	_is("a", '"a"', "string", false);
+	_is(new String(), "new String()", "string", true);
+	_is(Symbol(), "Symbol()", "symbol", false);
+	_is(void 0, "void 0", "undefined", false);
+	_is(new WeakMap(), "new WeakMap()", "weakmap", true);
+	_is(new WeakSet(), "new WeakSet()", "weakset", true);
 	{
 		class Foo {}
-		_is(new Foo(), "<i>class Foo {}</i><br>new Foo()", "object", "object", "Object", "Foo");
+		_is(new Foo(), "<i>class Foo {}</i><br>new Foo()", "object", true);
 	}
 	{
 		class Foo extends String {}
-		_is(new Foo(), "<i>class Foo extends String {}</i><br>new Foo()", "string", "object", "String", "Foo");
+		_is(new Foo(), "<i>class Foo extends String {}</i><br>new Foo()", "string", true);
 	}
 	{
 		class Foo { get [Symbol.toStringTag](){ return "Bar"; } }
-		_is(new Foo(), "<i>class Foo { get [Symbol.toStringTag](){ return \"Bar\"; } }</i><br>new Foo()", "object", "object", "Bar", "Foo");
+		_is(new Foo(), "<i>class Foo { get [Symbol.toStringTag](){ return \"Bar\"; } }</i><br>new Foo()", "object", true);
 	}
 }
 
-
+/*
 function _tester(value, pseudocode, _testerNames){
 	
 	const testers = [
@@ -191,3 +199,4 @@ function _more(test, pseudocode, _result){
 	_more(is.of(5, Number), "is.of(5, Number)", false);
 	_more(is.of(new Number(5), Number), "is.of(new Number(5), Number)", true);
 }
+*/

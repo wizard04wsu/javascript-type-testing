@@ -3,7 +3,7 @@
 const TYPES = {
 	array:     {                         class: Array    },
 	bigint:    { primitive: "bigint"                     },
-	boolean:   { primitive: "boolean",   class: Boolean  },
+	boolean:   { primitive: "boolean",                   },
 	date:      {                         class: Date     },
 	error:     {                         class: Error    },
 	function:  {                         class: Function },
@@ -26,9 +26,10 @@ const TYPES = {
 /**
  * A collection of boolean properties indicating the type of the given value.
  * @class TypeTest
- * @extends {String}
  */
-class TypeTest extends String {
+class TypeTest {
+	
+	#typeName;
 	
 	/**
 	 * @constructor
@@ -62,7 +63,7 @@ class TypeTest extends String {
 			}
 		}
 		
-		super(typeName);
+		this.#typeName = typeName;
 		
 		for(const name in TYPES){
 			this[name] = typeName === name;
@@ -74,6 +75,7 @@ class TypeTest extends String {
 			this.infinite = !this.real;
 		}
 		
+		this.object = value instanceof Object;
 		this.primitive = !this.object;
 		this.objectish = this.object || this.null;
 		
@@ -85,13 +87,24 @@ class TypeTest extends String {
 		
 		if(this.string || this.array){
 			this.empty = value.length === 0;
+			this.nonempty = !this.empty;
 		}
-		else if(this.map || this.set || this.weakmap || this.weakset){
+		else if(this.map || this.set){
 			this.empty = value.size === 0;
+			this.nonempty = !this.empty;
 		}
+	}
+	
+	toString(){
+		return this.#typeName;
 	}
 }
 
+/**
+ * Determine the type of a value. The returned object includes boolean properties to quickly test against specific types or for specific states (e.g., 'empty').
+ * @param {*} value - The value to be tested.
+ * @returns {TypeTest}
+ */
 function is(value){
 	return new TypeTest(value);
 }
