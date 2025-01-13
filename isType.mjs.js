@@ -96,7 +96,7 @@ class TypeTest {
 			this.nonempty = !this.empty;
 		}
 		else{
-			this.empty = this.nonempty = void 0;
+			this.empty = this.nonempty = false;
 		}
 	}
 	

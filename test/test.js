@@ -5,6 +5,7 @@ let testResults = [];
 {
 	_is(()=>(void 0), is.undefined, is.primitive, is.nullish, is.falsy);
 	_is(()=>(new Number(Infinity)), is.number, is.defined, is.object, is.objectish, is.truthy, is.infinite, is.numberish);
+	_is(()=>([]), is.array, is.defined, is.object, is.objectish, is.truthy, is.empty);
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{document.body.innerHTML += createTable()});
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", ()=>{document.body.innerHTML += cr
 /**
  * Perform a test and add the result details to the `testResults` array.
  *
- * @param {function} fn - An arrow function returning the value to be tested. The function body is saved as a string for later use.
+ * @param {function} fn - An arrow function, in the form of `()=>(...)`, returning the value to be tested. The function body is saved as a string for later use.
  * @param {string} type - The expected type of the test value.
  * @param {...string} [trues] - Names of all additional properties of the test result that are expected to evaluate as `true`.
  */
@@ -71,12 +72,12 @@ function createTable(){
  */
 function createRow(result){
 	
-	let typeMatch = result.type.expected !== result.type.actual;
+	let typeMatch = result.type.expected === result.type.actual;
 	
 	let code = result.code.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;");
 	
-	let cells = `<td>${code}</td><td ${!typeMatch ? 'class="error"' : ""}>${result.type.actual}`;
-	if(typeMatch) cells += ` (expected ${result.type.expected})`;
+	let cells = `<td><code>${code}</code></td><td class="${typeMatch ? "match" : "error"}">${result.type.actual}`;
+	if(!typeMatch) cells += `<br>(expected ${result.type.expected})`;
 	cells += `</td>`;
 	
 	for(const prop in result.properties){
@@ -95,7 +96,8 @@ function createRow(result){
 function createCell(expected, actual){
 	
 	if(!(expected || actual)) return `<td></td>`;
-	return `<td class="${expected === actual ? "match" : "error"}">${expected ? "✔️" : "✖️"}</td>`;
+	if(expected === actual) return `<td class="match">✔️</td>`;
+	return `<td class="error" title="expected ${expected}">${actual ? "✔️" : ""}</td>`;
 }
 
 /*{

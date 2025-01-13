@@ -21,18 +21,42 @@
 			color: #888;
 		}
 		
+		#types {
+			font-family: sans-serif;
+			margin-top: 5em;
+		}
 		#types th {
 			position: relative;
-			padding: 0 1.25em;
+			padding: 0 0.625em;
 			border: none;
 		}
 		#types th div {
 			position: absolute;
 			transform-origin: top left;
 			transform: rotate(-60deg);
-			left: calc(50% - 1.25em* cos(30deg));
+			left: calc(50% - 1em * cos(30deg));
 			line-height: 1.25;
-			top: calc(-1em* sin(30deg));
+			top: calc(-1em * sin(30deg) - 0.25em);
+		}
+		#types td {
+			padding: 0 0.25em 0.25em;
+			min-width: 1.375em;
+			vertical-align: middle;
+			white-space: nowrap;
+			text-align: left;
+			background: #90ee9022;
+		}
+		#types td:nth-child(n+3) {
+			text-align: center;
+		}
+		#types td:first-child {
+			background: none;
+		}
+		#types td.match {
+			background: lightgreen;
+		}
+		#types td.error {
+			background: lightcoral;
 		}
 	</style>
 	
