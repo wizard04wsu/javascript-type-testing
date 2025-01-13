@@ -23,39 +23,6 @@ const TYPES = {
 	weakset:   {                         class: WeakSet  },
 };
 
-const PROPERTY_NAMES = [
-	"array",
-	"bigint",
-	"boolean",
-	"date",
-	"defined",
-	"empty",
-	"error",
-	"falsy",
-	"function",
-	"infinite",
-	"map",
-	"nan",
-	"nonempty",
-	"null",
-	"nullish",
-	"number",
-	"numberish",
-	"object",
-	"objectish",
-	"primitive",
-	"promise",
-	"real",
-	"regex",
-	"set",
-	"string",
-	"symbol",
-	"truthy",
-	"undefined",
-	"weakmap",
-	"weakset"
-];
-
 /**
  * A collection of boolean properties set according to the type, and sometimes value, of the argument.
  * @class TypeTest
@@ -128,6 +95,9 @@ class TypeTest {
 			this.empty = value.size === 0;
 			this.nonempty = !this.empty;
 		}
+		else{
+			this.empty = this.nonempty = void 0;
+		}
 	}
 	
 	toString(){
@@ -138,10 +108,11 @@ class TypeTest {
 class Is extends TypeTest {
 	
 	constructor(value){
-		
 		super(value);
-		
-		this.type = this.toString();
+	}
+	
+	get type(){
+		return this.toString();
 	}
 	
 	all(...propNames){
@@ -163,8 +134,8 @@ function is(value){
 	return new Is(value);
 }
 
-PROPERTY_NAMES.forEach((propName)=>{
+for(const propName in new TypeTest()){
 	is[propName] = propName;
-});
+}
 
 export { is as default };

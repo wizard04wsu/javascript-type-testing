@@ -20,6 +20,20 @@
 			display: block;
 			color: #888;
 		}
+		
+		#types th {
+			position: relative;
+			padding: 0 1.25em;
+			border: none;
+		}
+		#types th div {
+			position: absolute;
+			transform-origin: top left;
+			transform: rotate(-60deg);
+			left: calc(50% - 1.25em* cos(30deg));
+			line-height: 1.25;
+			top: calc(-1em* sin(30deg));
+		}
 	</style>
 	
 	<script src="test.js" type="module"></script>
