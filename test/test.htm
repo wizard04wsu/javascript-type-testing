@@ -3,60 +3,62 @@
 	<title>isType tests</title>
 	
 	<style>
-		table {
-			border-collapse: collapse;
-			margin: 1.25em;
+		body {
+			margin: 0;
+			padding: 1.25em;
+			font-family: sans-serif;
 		}
-		th, td {
+		#tests {
+			border-collapse: collapse;
+			margin-right: 0.5em;
+		}
+		#tests th,
+		#tests td {
 			border: 1px solid #000;
 			padding: 0.25em 0.5em;
-			vertical-align: top;
 		}
-		td.fail {
-			background-color: #FEE;
+		#tests thead {
+			height: 5em;
 		}
-		td.fail::after {
-			content: "(expected " attr(data-expected) ")";
-			display: block;
-			color: #888;
-		}
-		
-		#types {
-			font-family: sans-serif;
-			margin-top: 5em;
-		}
-		#types th {
+		#tests th {
 			position: relative;
 			padding: 0 0.625em;
 			border: none;
+			vertical-align: top;
 		}
-		#types th div {
+		#tests th div {
 			position: absolute;
 			transform-origin: top left;
 			transform: rotate(-60deg);
 			left: calc(50% - 1em * cos(30deg));
 			line-height: 1.25;
-			top: calc(-1em * sin(30deg) - 0.25em);
+			bottom: -0.5em;
 		}
-		#types td {
-			padding: 0 0.25em 0.25em;
+		#tests td {
+			padding: 0.25em;
 			min-width: 1.375em;
 			vertical-align: middle;
 			white-space: nowrap;
 			text-align: left;
 			background: #90ee9022;
 		}
-		#types td:nth-child(n+3) {
+		#tests td:nth-child(n+3) {
+			padding: 0 0.25em 0.25em;
 			text-align: center;
 		}
-		#types td:first-child {
+		#tests td:first-child {
 			background: none;
+			white-space: normal;
+			min-width: 10em;
 		}
-		#types td.match {
+		#tests td.match {
 			background: lightgreen;
 		}
-		#types td.error {
+		#tests td.error {
 			background: lightcoral;
+		}
+		#tests tbody tr:hover {
+			background: lightblue;
 		}
 	</style>
 	
@@ -64,43 +66,7 @@
 </head>
 <body>
 	
-	<details open><summary>Types</summary>
-		<table>
-			<thead>
-				<tr>
-					<th>Value</th>
-					<th>Type</th>
-					<th>Object</th>
-					<th>Properties</th>
-				</tr>
-			</thead>
-			<tbody id="type_results"></tbody>
-		</table>
-	</details>
-	
-	<details><summary>Type Tester Methods</summary>
-		<table>
-			<thead>
-				<tr>
-					<th>Value</th>
-					<th>Successful Type Tester Methods</th>
-				</tr>
-			</thead>
-			<tbody id="tester_results"></tbody>
-		</table>
-	</details>
-	
-	<details><summary>Additional Methods</summary>
-		<table>
-			<thead>
-				<tr>
-					<th>Test</th>
-					<th>Result</th>
-				</tr>
-			</thead>
-			<tbody id="additional_results"></tbody>
-		</table>
-	</details>
+	<table id="tests"></table>
 	
 </body>
 </html>
