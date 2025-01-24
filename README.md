@@ -4,6 +4,8 @@ A robust alternative to JavaScript's built-in type testing.
 
 See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/test.htm) for examples.
 
+***Version 4 is not backwards compatible.***
+
 
 ---
 
@@ -31,7 +33,7 @@ Syntax:
 
 Enumerable properties of the **is** function are string values of the name of each descriptor. These can be used 
 in the `.all()` and `.any()` methods instead of string literals.
-For example, `is(_value_).all("number", "object")` is equivalent to `is(_value_).all(is.number, is.object)`.
+For example, <code>is(<i>value</i>).all("number", "object")</code> is equivalent to <code>is(<i>value</i>).all(is.number, is.object)</code>.
 
 
 ## Type Names and Related Descriptors
@@ -67,9 +69,10 @@ For example, `is(_value_).all("number", "object")` is equivalent to `is(_value_)
 | nonempty         |           | not _empty_                   | `String`, `Array`, `Map`, or `Set` that is not _empty_
 | **date**         |    yes    |                               | `Date`
 | **error**        |    yes    |                               | `Error`
-| **function**     |    yes    |                               | `Function`, `function(){}`, `()=>{}`
+| **function**     |    yes    |                               | `Function`
 | **promise**      |    yes    |                               | `Promise`
-| **regex**        |    yes    |                               | `Regex`, `/foo/`
+| **regex**        |    yes    |                               | `Regex`
 
+## Note
 
 Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.
