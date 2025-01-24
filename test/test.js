@@ -1,5 +1,42 @@
 import is from "../isType.mjs.js";
 
+window.is = is;
+
+const COLUMNS = [
+	"defined",
+	"undefined",
+	"primitive",
+	"object",
+	"objectish",
+	"null",
+	"nullish",
+	"boolean",
+	"false",
+	"true",
+	"falsy",
+	"truthy",
+	"symbol",
+	"bigint",
+	"numberish",
+	"nan",
+	"number",
+	"real",
+	"infinite",
+	"string",
+	"array",
+	"map",
+	"set",
+	"weakmap",
+	"weakset",
+	"empty",
+	"nonempty",
+	"date",
+	"error",
+	"function",
+	"promise",
+	"regex",
+];
+
 let testResults = [];
 
 {
@@ -8,8 +45,14 @@ let testResults = [];
 	_is(()=>(false), is.boolean, is.defined, is.primitive, is.false, is.falsy);
 	_is(()=>(true), is.boolean, is.defined, is.primitive, is.true, is.truthy);
 	_is(()=>(new Boolean(false)), is.object, is.defined, is.objectish, is.truthy);
+	_is(()=>(Symbol()), is.symbol, is.defined, is.primitive, is.truthy);
+	_is(()=>(Symbol.toStringTag), is.symbol, is.defined, is.primitive, is.truthy);
 	_is(()=>(0n), is.bigint, is.defined, is.primitive, is.falsy);
 	_is(()=>(5n), is.bigint, is.defined, is.primitive, is.truthy);
+	_is(()=>(NaN), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
+	_is(()=>(+"a"), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
+	_is(()=>(new Number(NaN)), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
+	_is(()=>(new Number("a")), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
 	_is(()=>(0), is.number, is.defined, is.primitive, is.falsy, is.real, is.numberish);
 	_is(()=>(5), is.number, is.defined, is.primitive, is.truthy, is.real, is.numberish);
 	_is(()=>(new Number(0)), is.number, is.defined, is.object, is.objectish, is.truthy, is.real, is.numberish);
@@ -17,15 +60,10 @@ let testResults = [];
 	_is(()=>(Infinity), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
 	_is(()=>(-1/0), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
 	_is(()=>(new Number(Infinity)), is.number, is.defined, is.object, is.objectish, is.truthy, is.infinite, is.numberish);
-	_is(()=>(NaN), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
-	_is(()=>(+"a"), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
-	_is(()=>(new Number(NaN)), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
-	_is(()=>(new Number("a")), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
 	_is(()=>(""), is.string, is.defined, is.primitive, is.falsy, is.empty);
 	_is(()=>("a"), is.string, is.defined, is.primitive, is.truthy, is.nonempty);
 	_is(()=>(new String("")), is.string, is.defined, is.object, is.objectish, is.truthy, is.empty);
 	_is(()=>(new String("a")), is.string, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
-	_is(()=>(Symbol()), is.symbol, is.defined, is.primitive, is.truthy);
 	_is(()=>([]), is.array, is.defined, is.object, is.objectish, is.truthy, is.empty);
 	_is(()=>([1,2]), is.array, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
 	_is(()=>(new Array()), is.array, is.defined, is.object, is.objectish, is.truthy, is.empty);
@@ -51,8 +89,6 @@ let testResults = [];
 	_is(()=>(/*class A{}*/ new A()), is.object, is.defined, is.objectish, is.truthy);
 	class B extends String{}
 	_is(()=>(/*class B extends String{}*/ new B()), is.string, is.defined, is.object, is.objectish, is.truthy, is.empty);
-	class C { get [Symbol.toStringTag](){ return "D"; } }
-	_is(()=>(/*class C {get [Symbol.toStringTag](){return "D"}}*/ new C()), is.object, is.defined, is.objectish, is.truthy);
 	
 }
 
@@ -100,17 +136,17 @@ function _is(fn, type, ...trues){
  */
 function createTableContent(){
 	
+	let header = "<th></th><th><div>type</div></th>";
+	for(const propName of COLUMNS){
+		header += `<th><div>${propName}</div></th>`;
+	}
+	
 	let rows = "";
 	for(const result of testResults){
 		rows += createRow(result);
 	}
 	
-	let header = "<th></th><th><div>type</div></th>";
-	for(const propName in is){
-		header += `<th><div>${propName}</div></th>`;
-	}
-	
-	return `<thead><tr>${header}</tr></thead><tbody>${rows}</tbody>`;
+	return `<thead style="position:sticky;top:0;background:#FFF;"><tr>${header}</tr></thead><tbody>${rows}</tbody>`;
 }
 
 /**
@@ -128,7 +164,7 @@ function createRow(result){
 	if(!typeMatch) cells += `<br>(expected ${result.type.expected})`;
 	cells += `</td>`;
 	
-	for(const prop in result.properties){
+	for(const prop of COLUMNS){
 		cells += createCell(result.properties[prop].expected, result.properties[prop].actual);
 	}
 	

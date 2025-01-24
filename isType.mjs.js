@@ -69,15 +69,18 @@ class TypeTest {
 			this[name] = typeName === name;
 		}
 		
+		this.object = value instanceof Object;
+		this.primitive = !this.object;
+		this.objectish = this.object || this.null;
+		
 		this.numberish = this.number || this.nan;
 		if(this.number){
 			this.real = Number.isFinite(this.object ? value.valueOf() : value);
 			this.infinite = !this.real;
 		}
-		
-		this.object = value instanceof Object;
-		this.primitive = !this.object;
-		this.objectish = this.object || this.null;
+		else{
+			this.real = this.infinite = false;
+		}
 		
 		this.defined = !this.undefined;
 		this.nullish = this.undefined || this.null;
