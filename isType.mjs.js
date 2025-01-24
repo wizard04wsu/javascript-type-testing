@@ -122,7 +122,7 @@ class IsType extends TypeTest {
 	}
 	
 	of(constructor){
-		return this.#valueConstructor && (this.#valueConstructor === constructor ||  this.#valueConstructor.prototype instanceof constructor);
+		return !!(this.#valueConstructor && (this.#valueConstructor === constructor ||  this.#valueConstructor.prototype instanceof constructor));
 	}
 	
 	all(...propNames){
