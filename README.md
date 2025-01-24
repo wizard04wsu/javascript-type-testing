@@ -13,40 +13,40 @@ See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/t
 This module uses an expanded set of type names that make no distinction between primitive values and objects. 
 For example, `5` and `new Number(5)` are both of type "number".
 
-| Type Name    | Primitive Values            | Instances Of Classes
+| Type Name        | Primitive Values            | Instances Of Classes
 | - | - | -
-| defined      | any value (not undefined)   | `Object`
-| undefined    | undefined                   | 
-| primitive    | not an instance of `Object` | 
-| object       |                             | `Object`
-| objectish    | `null`                      | `Object`
-| null         | `null`                      | 
-| nullish      | undefined, `null`           | 
-| boolean      | `false`, `true`             | 
-| false        | `false`                     | 
-| true         | `true`                      | 
-| falsy        | undefined, `null`, `false`, `0n`, `NaN`, `0`, `""` | 
-| truthy       | values that are not _falsy_ | `Object`
-| symbol       | a `Symbol`                  | 
-| bigint       | `0n`, `5n`                  | 
-| numberish    | `0`, `5`, `Infinity`, `NaN` | `Number`
-| nan          | `NaN`                       | `Number` instances with value `NaN`
-| number       | `0`, `5`, `Infinity`        | `Number` excluding instances with value `NaN`
-| real         | `0`, `5`                    | `Number` instances for real numbers
-| infinite     | `Infinity`                  | `Number` instances for infinite numbers
-| string       | `""`, `"foo"`               | `String`
-| array        | `[]`, `[1,2]`               | `Array`
-| map          |                             | `Map`
-| set          |                             | `Set`
-| weakmap      |                             | `WeakMap`
-| weakset      |                             | `WeakSet`
-| empty        | `[]`                        | `String` or `Array` of length == 0, `Map` or `Set` of size == 0
-| nonempty     | values that are not _empty_ | instances that are not _empty_
-| date         |                             | `Date`
-| error        |                             | `Error`
-| function     |                             | `Function`, `function(){}`, `()=>{}`
-| promise      |                             | `Promise`
-| regex        |                             | `Regex`, `/foo/`
+| defined          | any value (not undefined)   | `Object`
+| **undefined**    | undefined                   | 
+| primitive        | not an instance of `Object` | 
+| **object**       |                             | `Object`
+| objectish        | `null`                      | `Object`
+| **null**         | `null`                      | 
+| nullish          | undefined, `null`           | 
+| **boolean**      | `false`, `true`             | 
+| false            | `false`                     | 
+| true             | `true`                      | 
+| falsy            | undefined, `null`, `false`, `0n`, `NaN`, `0`, `""` | 
+| truthy           | values that are not _falsy_ | `Object`
+| **symbol**       | a `Symbol`                  | 
+| **bigint**       | `0n`, `5n`                  | 
+| numberish        | `0`, `5`, `Infinity`, `NaN` | `Number`
+| **nan**          | `NaN`                       | `Number` instances with value `NaN`
+| **number**       | `0`, `5`, `Infinity`        | `Number` excluding instances with value `NaN`
+| real             | `0`, `5`                    | `Number` instances for real numbers
+| infinite         | `Infinity`                  | `Number` instances for infinite numbers
+| **string**       | `""`, `"foo"`               | `String`
+| **array**        | `[]`, `[1,2]`               | `Array`
+| **map**          |                             | `Map`
+| **set**          |                             | `Set`
+| **weakmap**      |                             | `WeakMap`
+| **weakset**      |                             | `WeakSet`
+| empty            | `[]`                        | `String` or `Array` of length == 0, `Map` or `Set` of size == 0
+| nonempty         | values that are not _empty_ | instances that are not _empty_
+| **date**         |                             | `Date`
+| **error**        |                             | `Error`
+| **function**     |                             | `Function`, `function(){}`, `()=>{}`
+| **promise**      |                             | `Promise`
+| **regex**        |                             | `Regex`, `/foo/`
 
 
 ## Determine a Type
