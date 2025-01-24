@@ -108,14 +108,21 @@ class TypeTest {
 	}
 }
 
-class Is extends TypeTest {
+class IsType extends TypeTest {
+	
+	#valueConstructor;
 	
 	constructor(value){
 		super(value);
+		if(value instanceof Object) this.#valueConstructor = value.constructor;
 	}
 	
 	get type(){
 		return this.toString();
+	}
+	
+	of(constructor){
+		return this.#valueConstructor && (this.#valueConstructor === constructor ||  this.#valueConstructor.prototype instanceof constructor);
 	}
 	
 	all(...propNames){
@@ -130,15 +137,18 @@ class Is extends TypeTest {
 /**
  * Determine the type of a value. The returned object includes boolean properties to quickly test against specific types or for specific states (e.g., 'empty').
  * @param {*} value - The value to be tested.
- * @returns {Is}
+ * @returns {IsType}
  */
 function is(value){
 	
-	return new Is(value);
+	return new IsType(value);
 }
 
 for(const propName in new TypeTest()){
-	is[propName] = propName;
+	Object.defineProperty(is, propName, {
+		value: propName,
+		enumerable: true,
+	});
 }
 
 export { is as default };
