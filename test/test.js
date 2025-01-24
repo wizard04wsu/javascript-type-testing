@@ -1,193 +1,185 @@
 import is from "../isType.mjs.js";
 
+window.is = is;
 
-function _is(value, pseudocode, _type, _typeof, _toStringTag, _constructorName){
-	
-	const type = is(value);
-	
-	const tbody = document.getElementById("type_results");
-	const tr = document.createElement("tr");
-	tr.innerHTML = `<td>${pseudocode}</td>`;
-	createCell(type.type, _type);
-	createCell(type.typeof, _typeof);
-	createCell(type.toStringTag, _toStringTag);
-	createCell(type.constructorName, _constructorName);
-	tbody.appendChild(tr);
-	
-	function createCell(actual, expected){
-		const td = document.createElement("td");
-		td.dataset.expected = expected === void 0 ? "undefined" : `"${expected}"`;
-		td.innerHTML = actual === void 0 ? `<i>undefined</i>` : `"${actual}"`;
-		if(actual !== expected) td.classList.add("fail");
-		tr.appendChild(td);
-	}
-}
+const COLUMNS = [
+	"defined",
+	"undefined",
+	"primitive",
+	"object",
+	"objectish",
+	"null",
+	"nullish",
+	"boolean",
+	"false",
+	"true",
+	"falsy",
+	"truthy",
+	"symbol",
+	"bigint",
+	"numberish",
+	"nan",
+	"number",
+	"real",
+	"infinite",
+	"string",
+	"array",
+	"map",
+	"set",
+	"weakmap",
+	"weakset",
+	"empty",
+	"nonempty",
+	"date",
+	"error",
+	"function",
+	"promise",
+	"regex",
+];
 
-{
-	_is([], "[]", "array", "object", "Array", "Array");
-	_is(new Array(), "new Array()", "array", "object", "Array", "Array");
-	_is(5n, "5n", "bigint", "bigint");
-	_is(true, "true", "boolean", "boolean");
-	_is(false, "false", "boolean", "boolean");
-	_is(new Boolean(), "new Boolean()", "boolean", "object", "Boolean", "Boolean");
-	_is(new Date(), "new Date()", "date", "object", "Date", "Date");
-	_is(new Error(), "new Error()", "error", "object", "Error", "Error");
-	_is(new TypeError(), "new TypeError()", "error", "object", "Error", "TypeError");
-	_is(()=>{}, "()=>{}", "function", "function", "Function", "Function");
-	_is(Object, "Object", "function", "function", "Function", "Function");
-	_is(new Map(), "new Map()", "map", "object", "Map", "Map");
-	_is(NaN, "NaN", "nan", "number");
-	_is(new Number(NaN), "new Number(NaN)", "nan", "object", "Number", "Number");
-	_is(new Number('a'), "new Number('a')", "nan", "object", "Number", "Number");
-	_is(null, "null", "null", "object");
-	_is(5, "5", "number", "number");
-	_is(Infinity, "Infinity", "number", "number");
-	_is(new Number(), "new Number()", "number", "object", "Number", "Number");
-	_is({}, "{}", "object", "object", "Object", "Object");
-	_is(new Object(), "new Object()", "object", "object", "Object", "Object");
-	_is(new Promise(()=>{}), "new Promise(()=>{})", "promise", "object", "Promise", "Promise");
-	_is(/a/, "/a/", "regex", "object", "RegExp", "RegExp");
-	_is(new RegExp(), "new RegExp()", "regex", "object", "RegExp", "RegExp");
-	_is(new Set(), "new Set()", "set", "object", "Set", "Set");
-	_is("", '""', "string", "string");
-	_is("a", '"a"', "string", "string");
-	_is(new String(), "new String()", "string", "object", "String", "String");
-	_is(Symbol(), "Symbol()", "symbol", "symbol");
-	_is(void 0, "void 0", "undefined", "undefined");
-	_is(new WeakMap(), "new WeakMap()", "weakmap", "object", "WeakMap", "WeakMap");
-	_is(new WeakSet(), "new WeakSet()", "weakset", "object", "WeakSet", "WeakSet");
-	{
-		class Foo {}
-		_is(new Foo(), "<i>class Foo {}</i><br>new Foo()", "object", "object", "Object", "Foo");
-	}
-	{
-		class Foo extends String {}
-		_is(new Foo(), "<i>class Foo extends String {}</i><br>new Foo()", "string", "object", "String", "Foo");
-	}
-	{
-		class Foo { get [Symbol.toStringTag](){ return "Bar"; } }
-		_is(new Foo(), "<i>class Foo { get [Symbol.toStringTag](){ return \"Bar\"; } }</i><br>new Foo()", "object", "object", "Bar", "Foo");
-	}
-}
-
-
-function _tester(value, pseudocode, _testerNames){
-	
-	const testers = [
-		"array",
-		"bigint",
-		"boolean",
-		"date",
-		"defined",
-		"error",
-		"falsy",
-		"function",
-		"infinite",
-		"map",
-		"nan",
-		"null",
-		"nullish",
-		"number",
-		"numberish",
-		"object",
-		"primitive",
-		"promise",
-		"real",
-		"regex",
-		"set",
-		"string",
-		"symbol",
-		"truthy",
-		"undefined",
-		"weakmap",
-		"weakset",
-	];
-	
-	const tbody = document.getElementById("tester_results");
-	const tr = document.createElement("tr");
-	tr.innerHTML = `<td>${pseudocode}</td>`;
-	const matches = [];
-	for(const tester of testers){
-		const match = is[tester](value);
-		if(match) matches.push(tester);
-	}
-	createCell(matches.join(", "), _testerNames.sort().join(", "));
-	tbody.appendChild(tr);
-	
-	function createCell(actual, expected){
-		const td = document.createElement("td");
-		td.dataset.expected = expected;
-		td.innerHTML = actual;
-		if(actual !== expected) td.classList.add("fail");
-		tr.appendChild(td);
-	}
-}
+let testResults = [];
 
 {
-	_tester([], "[]", ["array", "object", "defined", "truthy"]);
-	_tester(new Array(), "new Array()", ["array", "object", "defined", "truthy"]);
-	_tester(5n, "5n", ["bigint", "primitive", "defined", "truthy"]);
-	_tester(0n, "0n", ["bigint", "primitive", "defined", "falsy"]);
-	_tester(true, "true", ["boolean", "primitive", "defined", "truthy"]);
-	_tester(false, "false", ["boolean", "primitive", "defined", "falsy"]);
-	_tester(new Boolean(), "new Boolean()", ["boolean", "object", "defined", "truthy"]);
-	_tester(new Date(), "new Date()", ["date", "object", "defined", "truthy"]);
-	_tester(new Error(), "new Error()", ["error", "object", "defined", "truthy"]);
-	_tester(new TypeError(), "new TypeError()", ["error", "object", "defined", "truthy"]);
-	_tester(()=>{}, "()=>{}", ["function", "object", "defined", "truthy"]);
-	_tester(Object, "Object", ["function", "object", "defined", "truthy"]);
-	_tester(new Map(), "new Map()", ["map", "object", "defined", "truthy"]);
-	_tester(NaN, "NaN", ["nan", "numberish", "primitive", "defined", "falsy"]);
-	_tester(new Number(NaN), "new Number(NaN)", ["nan", "numberish", "object", "defined", "truthy"]);
-	_tester(new Number('a'), "new Number('a')", ["nan", "numberish", "object", "defined", "truthy"]);
-	_tester(null, "null", ["null", "nullish", "primitive", "defined", "falsy"]);
-	_tester(5, "5", ["number", "numberish", "real", "primitive", "defined", "truthy"]);
-	_tester(0, "0", ["number", "numberish", "real", "primitive", "defined", "falsy"]);
-	_tester(-0, "-0", ["number", "numberish", "real", "primitive", "defined", "falsy"]);
-	_tester(Infinity, "Infinity", ["number", "infinite", "numberish", "primitive", "defined", "truthy"]);
-	_tester(new Number(5), "new Number(5)", ["number", "numberish", "real", "object", "defined", "truthy"]);
-	_tester(new Number(0), "new Number(0)", ["number", "numberish", "real", "object", "defined", "truthy"]);
-	_tester({}, "{}", ["object", "defined", "truthy"]);
-	_tester(new Object(), "new Object()", ["object", "defined", "truthy"]);
-	_tester(new Promise(()=>{}), "new Promise(()=>{})", ["promise", "object", "defined", "truthy"]);
-	_tester(/a/, "/a/", ["regex", "object", "defined", "truthy"]);
-	_tester(new RegExp(), "new RegExp()", ["regex", "object", "defined", "truthy"]);
-	_tester(new Set(), "new Set()", ["set", "object", "defined", "truthy"]);
-	_tester("", '""', ["string", "primitive", "defined", "falsy"]);
-	_tester("a", '"a"', ["string", "primitive", "defined", "truthy"]);
-	_tester(new String(), "new String()", ["string", "object", "defined", "truthy"]);
-	_tester(Symbol(), "Symbol()", ["symbol", "primitive", "defined", "truthy"]);
-	_tester(void 0, "void 0", ["undefined", "nullish", "primitive", "falsy"]);
-	_tester(new WeakMap(), "new WeakMap()", ["weakmap", "object", "defined", "truthy"]);
-	_tester(new WeakSet(), "new WeakSet()", ["weakset", "object", "defined", "truthy"]);
-	_tester(document.all, "document.all", ["object", "nullish", "undefined", "falsy"]);
+	_is(()=>(void 0), is.undefined, is.primitive, is.nullish, is.falsy);
+	_is(()=>(null), is.null, is.defined, is.primitive, is.nullish, is.objectish, is.falsy);
+	_is(()=>(false), is.boolean, is.defined, is.primitive, is.false, is.falsy);
+	_is(()=>(true), is.boolean, is.defined, is.primitive, is.true, is.truthy);
+	_is(()=>(new Boolean(false)), is.object, is.defined, is.objectish, is.truthy);
+	_is(()=>(Symbol()), is.symbol, is.defined, is.primitive, is.truthy);
+	_is(()=>(Symbol.toStringTag), is.symbol, is.defined, is.primitive, is.truthy);
+	_is(()=>(0n), is.bigint, is.defined, is.primitive, is.falsy);
+	_is(()=>(5n), is.bigint, is.defined, is.primitive, is.truthy);
+	_is(()=>(NaN), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
+	_is(()=>(+"a"), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
+	_is(()=>(new Number(NaN)), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
+	_is(()=>(new Number("a")), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
+	_is(()=>(0), is.number, is.defined, is.primitive, is.falsy, is.real, is.numberish);
+	_is(()=>(5), is.number, is.defined, is.primitive, is.truthy, is.real, is.numberish);
+	_is(()=>(new Number(0)), is.number, is.defined, is.object, is.objectish, is.truthy, is.real, is.numberish);
+	_is(()=>(new Number(5)), is.number, is.defined, is.object, is.objectish, is.truthy, is.real, is.numberish);
+	_is(()=>(Infinity), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
+	_is(()=>(-1/0), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
+	_is(()=>(new Number(Infinity)), is.number, is.defined, is.object, is.objectish, is.truthy, is.infinite, is.numberish);
+	_is(()=>(""), is.string, is.defined, is.primitive, is.falsy, is.empty);
+	_is(()=>("a"), is.string, is.defined, is.primitive, is.truthy, is.nonempty);
+	_is(()=>(new String("")), is.string, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	_is(()=>(new String("a")), is.string, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
+	_is(()=>([]), is.array, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	_is(()=>([1,2]), is.array, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
+	_is(()=>(new Array()), is.array, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	_is(()=>(new Array(1,2)), is.array, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
+	_is(()=>(new Map()), is.map, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	_is(()=>((new Map()).set("a",1)), is.map, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
+	_is(()=>(new Set()), is.set, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	_is(()=>(new Set([1,2])), is.set, is.defined, is.object, is.objectish, is.truthy, is.nonempty);
+	_is(()=>(new WeakMap()), is.weakmap, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new WeakSet()), is.weakset, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new Date()), is.date, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new Error()), is.error, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new TypeError()), is.error, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(()=>{}), is.function, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new Function("")), is.function, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(Object), is.function, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new Promise(()=>{})), is.promise, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(/a/), is.regex, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new RegExp("a")), is.regex, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>({}), is.object, is.defined, is.object, is.objectish, is.truthy);
+	_is(()=>(new Object()), is.object, is.defined, is.objectish, is.truthy);
+	class A{}
+	_is(()=>(/*class A{}*/ new A()), is.object, is.defined, is.objectish, is.truthy);
+	class B extends String{}
+	_is(()=>(/*class B extends String{}*/ new B()), is.string, is.defined, is.object, is.objectish, is.truthy, is.empty);
+	
 }
 
+document.addEventListener("DOMContentLoaded", ()=>{document.querySelector("#tests").innerHTML = createTableContent()});
 
-function _more(test, pseudocode, _result){
+/**
+ * Perform a test and add the result details to the `testResults` array.
+ *
+ * @param {function} fn - An arrow function, in the form of `()=>(...)`, returning the value to be tested. The function body is saved as a string for later use.
+ * @param {string} type - The expected type of the test value.
+ * @param {...string} [trues] - Names of all additional properties of the test result that are expected to evaluate as `true`.
+ */
+function _is(fn, type, ...trues){
 	
-	const tbody = document.getElementById("additional_results");
-	const tr = document.createElement("tr");
-	tr.innerHTML = `<td>${pseudocode}</td>`;
-	createCell(test, _result);
-	tbody.appendChild(tr);
+	trues.unshift(type);
+	const code = fn.toString().slice(5,-1);
+	const value = fn();
+	const test = is(value);
 	
-	function createCell(actual, expected){
-		const td = document.createElement("td");
-		td.dataset.expected = expected;
-		td.innerHTML = actual;
-		if(actual !== expected) td.classList.add("fail");
-		tr.appendChild(td);
+	const testResult = {
+		code: code,
+		type: {
+			expected: type,
+			actual: test.type
+		},
+		properties: {},
+	};
+	
+	for(const propName in is){
+		
+		const expected = trues.includes(propName);
+		const actual = test[propName];
+		
+		testResult.properties[propName] = {
+			expected: expected,
+			actual: actual
+		};
 	}
+	
+	testResults.push(testResult);
 }
 
-{
-	_more(is.empty(""), 'is.empty("")', true);
-	_more(is.empty("a"), 'is.empty("a")', false);
-	_more(is.empty([]), "is.empty([])", true);
-	_more(is.empty([5]), "is.empty([5])", false);
-	_more(is.empty(new Map()), "is.empty(new Map())", true);
-	_more(is.empty(new Map([[1, "one"]])), 'is.empty(new Map([[1, "one"]]))', false);
-	_more(is.of(5, Number), "is.of(5, Number)", false);
-	_more(is.of(new Number(5), Number), "is.of(new Number(5), Number)", true);
+/**
+ * Create a table to show the results.
+ */
+function createTableContent(){
+	
+	let header = "<th></th><th><div>type</div></th>";
+	for(const propName of COLUMNS){
+		header += `<th><div>${propName}</div></th>`;
+	}
+	
+	let rows = "";
+	for(const result of testResults){
+		rows += createRow(result);
+	}
+	
+	return `<thead style="position:sticky;top:0;background:#FFF;"><tr>${header}</tr></thead><tbody>${rows}</tbody>`;
+}
+
+/**
+ * Generate a row for the results table.
+ *
+ * @param {Object} result - An item in the `testResults` array.
+ */
+function createRow(result){
+	
+	let typeMatch = result.type.expected === result.type.actual;
+	
+	let code = result.code.replace("&","&amp;").replace("<","&lt;").replace(">","&gt;").replace("\"","&quot;");
+	
+	let cells = `<td><code>${code}</code></td><td class="${typeMatch ? "match" : "error"}">${result.type.actual}`;
+	if(!typeMatch) cells += `<br>(expected ${result.type.expected})`;
+	cells += `</td>`;
+	
+	for(const prop of COLUMNS){
+		cells += createCell(result.properties[prop].expected, result.properties[prop].actual);
+	}
+	
+	return `<tr>${cells}</tr>`;
+}
+
+/**
+ * Generate a cell for the results table.
+ *
+ * @param {boolean} expected
+ * @param {boolean} actual
+ */
+function createCell(expected, actual){
+	
+	if(!(expected || actual)) return `<td></td>`;
+	if(expected === actual) return `<td class="match">✔️</td>`;
+	return `<td class="error" title="expected ${expected}">${actual ? "✔️" : ""}</td>`;
 }
