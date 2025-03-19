@@ -1,35 +1,25 @@
 # Improved JavaScript Type Testing
 
-A robust alternative to JavaScript's built-in type testing.
+A robust alternative to type testing in vanilla JavaScript. Uses an expanded set of type names to simplify common tests.
 
 See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/test.htm) for examples.
 
 ***Version 4 is not backwards compatible.***
 
 
----
+## Syntax
 
-
-This module uses an expanded set of type names and related descriptors to simplify common tests of values. 
-Basic types do not distinguish between primitives and objects, but descriptors _primitive_ or _object_ 
-can be used to determine that aspect.
-For example, `5` and `new Number(5)` are both type _number_, but `5` has descriptor _primitive_ and `new Number(5)` has descriptor _object_.
-
-The **is()** function returns an object that describes its argument.
-
-Syntax:
 > **is**(_value_)
 
-
-## Return Value
+The return value is an object that describes the argument.
 
 | Member                 | Description
 | - | -
-| .type                  | The type of _value_ (using this module's type names).
+| .type                  | The type name of _value_.
 | .of(_class_)           | Tests if _value_ is an instance of _class_.
-| .all(_...descriptors)_ | Takes a list of descriptor names as arguments. Returns `true` if **all** of them applied to _value_.
-| .any(_...descriptors_) | Takes a list of descriptor names as arguments. Returns `true` if **any** of them applied to _value_.
-| \[_descriptor_\]       | Each [descriptor](#descriptors-and-type-names) property is a boolean that is `true` if it applied to _value_.
+| .all(_...descriptors_) | Takes descriptor names as arguments. Returns `true` if **all** of them apply to _value_.
+| .any(_...descriptors_) | Takes descriptor names as arguments. Returns `true` if **any** of them apply to _value_.
+| \[_descriptor_\]       | Each [descriptor](#types-and-descriptors) property is a boolean that is `true` if it applies to _value_.
 
 Enumerable properties of `is` are string constants of all the descriptor names. These can be used 
 in the `.all()` and `.any()` methods instead of string literals.
@@ -40,14 +30,18 @@ For example, these are equivalent:
 > <code>is(<i>value</i>).all(is.number, is.object)</code>
 
 
-## Descriptors and Type Names
+## Types and Descriptors
+
+Types in this module do not distinguish between primitives and objects. For example, `5` and `new Number(5)` are both of type "number".
+
+A descriptor is a boolean value that is `true` if it applies to the value being tested. Type names are included as descriptors. For example, `5` is associated with the _primitive_, _number_, and _finite_ descriptors, among others.
 
 | Descriptor       | Type Name | Primitive Values              | Instances Of Classes
 | - | - | - | -
 | defined          |           | not undefined                 | `Object`
 | **undefined**    |    yes    | undefined                     | 
-| primitive        |           | not an instance of `Object`   | 
-| **object**       |    yes    |                               | `Object`
+| primitive        |           | any primitive value           | 
+| **object**       |  yes[^1]  |                               | `Object`
 | objectish        |           | `null`                        | `Object`
 | **null**         |    yes    | `null`                        | 
 | nullish          |           | undefined, `null`             | 
@@ -61,7 +55,8 @@ For example, these are equivalent:
 | numberish        |           | `0`, `5`, `Infinity`, `NaN`   | `Number`
 | **nan**          |    yes    | `NaN`                         | `Number` with value `NaN`
 | **number**       |    yes    | `0`, `5`, `Infinity`          | `Number` excluding those with value `NaN`
-| real             |           | `0`, `5`                      | `Number` with a real number value
+| real[^2]         |           | `0`, `5`                      | `Number` with a finite number value
+| <a name="finite"></a>finite           |           | `0`, `5`                      | `Number` with a finite number value
 | infinite         |           | `Infinity`                    | `Number` with an infinite value
 | **string**       |    yes    | `""`, `"foo"`                 | `String`
 | **array**        |    yes    | `[]`, `[1,2]`                 | `Array`
@@ -77,6 +72,6 @@ For example, these are equivalent:
 | **promise**      |    yes    |                               | `Promise`
 | **regex**        |    yes    |                               | `Regex`
 
-## Math Note
 
-Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.
+[^1]: The "object" type is only used for a value if no other type is appropriate.
+[^2]: Deprecated. Use [_finite_](#finite) instead.
