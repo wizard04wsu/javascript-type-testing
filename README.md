@@ -13,30 +13,34 @@ See the [test page](https://wizard04wsu.github.io/javascript-type-testing/test/t
 This module uses an expanded set of type names and related descriptors to simplify common tests of values. 
 Basic types do not distinguish between primitives and objects, but descriptors _primitive_ or _object_ 
 can be used to determine that aspect.
-For example, `5` and `new Number(5)` are both _number_, but `5` is _primitive_ and `new Number(5)` is _object_.
+For example, `5` and `new Number(5)` are both type _number_, but `5` has descriptor _primitive_ and `new Number(5)` has descriptor _object_.
 
-The **is()** function returns an **IsType** object describing its argument.
+The **is()** function returns an object that describes its argument.
 
 Syntax:
 > **is**(_value_)
 
 
-## IsType Object
+## Return Value
 
 | Member                 | Description
 | - | -
 | .type                  | The type of _value_ (using this module's type names).
-| .of(_class_)           | Tests if _value_ was an instance of _class_.
+| .of(_class_)           | Tests if _value_ is an instance of _class_.
 | .all(_...descriptors)_ | Takes a list of descriptor names as arguments. Returns `true` if **all** of them applied to _value_.
 | .any(_...descriptors_) | Takes a list of descriptor names as arguments. Returns `true` if **any** of them applied to _value_.
-| \[[_descriptor_](#type-names-and-related-descriptors)\]          | Descriptors are listed in the table below. Each descriptor property is a boolean that is `true` if it applied to _value_.
+| \[_descriptor_\]       | Each [descriptor](#descriptors-and-type-names) property is a boolean that is `true` if it applied to _value_.
 
-Enumerable properties of the **is** function are string values of the name of each descriptor. These can be used 
+Enumerable properties of `is` are string constants of all the descriptor names. These can be used 
 in the `.all()` and `.any()` methods instead of string literals.
-For example, <code>is(<i>value</i>).all("number", "object")</code> is equivalent to <code>is(<i>value</i>).all(is.number, is.object)</code>.
+For example, these are equivalent:
+
+> <code>is(<i>value</i>).all("number", "object")</code>
+
+> <code>is(<i>value</i>).all(is.number, is.object)</code>
 
 
-## Type Names and Related Descriptors
+## Descriptors and Type Names
 
 | Descriptor       | Type Name | Primitive Values              | Instances Of Classes
 | - | - | - | -
@@ -51,7 +55,7 @@ For example, <code>is(<i>value</i>).all("number", "object")</code> is equivalent
 | false            |           | `false`                       | 
 | true             |           | `true`                        | 
 | falsy            |           | undefined, `null`, `false`, `0n`, `NaN`, `0`, `""` | 
-| truthy           |           | not _falsy_                   | `Object`
+| truthy           |           | not a _falsy_ value           | `Object`
 | **symbol**       |    yes    | a `Symbol`                    | 
 | **bigint**       |    yes    | `0n`, `5n`                    | 
 | numberish        |           | `0`, `5`, `Infinity`, `NaN`   | `Number`
@@ -65,14 +69,14 @@ For example, <code>is(<i>value</i>).all("number", "object")</code> is equivalent
 | **set**          |    yes    |                               | `Set`
 | **weakmap**      |    yes    |                               | `WeakMap`
 | **weakset**      |    yes    |                               | `WeakSet`
-| empty            |           | `""`, `[]`                    | `String` or `Array` of length == 0, `Map` or `Set` of size == 0
-| nonempty         |           | not _empty_                   | `String`, `Array`, `Map`, or `Set` that is not _empty_
+| empty            |           | `""`, `[]`                    | `String` or `Array` with `.length === 0`,<br>`Map` or `Set` with `.size === 0`
+| nonempty         |           | `"foo"`, `[1,2]`              | `String` or `Array` with `.length > 0`,<br>`Map` or `Set` with `.size > 0`
 | **date**         |    yes    |                               | `Date`
 | **error**        |    yes    |                               | `Error`
 | **function**     |    yes    |                               | `Function`
 | **promise**      |    yes    |                               | `Promise`
 | **regex**        |    yes    |                               | `Regex`
 
-## Note
+## Math Note
 
 Note that JavaScript doesn't always treat mathematical expressions of undefined or indeterminate form as you might expect. For example, `1/0` is an undefined form, but JavaScript evaluates it as `Infinity`.
