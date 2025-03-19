@@ -75,11 +75,11 @@ class TypeTest {
 		
 		this.numberish = this.number || this.nan;
 		if(this.number){
-			this.real = Number.isFinite(this.object ? value.valueOf() : value);
-			this.infinite = !this.real;
+			this.real = this.finite = Number.isFinite(this.object ? value.valueOf() : value);
+			this.infinite = !this.finite;
 		}
 		else{
-			this.real = this.infinite = false;
+			this.real = this.finite = this.infinite = false;
 		}
 		
 		this.defined = !this.undefined;

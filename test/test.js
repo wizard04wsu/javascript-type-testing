@@ -20,7 +20,7 @@ const COLUMNS = [
 	"numberish",
 	"nan",
 	"number",
-	"real",
+	"finite",
 	"infinite",
 	"string",
 	"array",
@@ -53,10 +53,10 @@ let testResults = [];
 	_is(()=>(+"a"), is.nan, is.defined, is.primitive, is.falsy, is.numberish);
 	_is(()=>(new Number(NaN)), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
 	_is(()=>(new Number("a")), is.nan, is.defined, is.object, is.objectish, is.truthy, is.numberish);
-	_is(()=>(0), is.number, is.defined, is.primitive, is.falsy, is.real, is.numberish);
-	_is(()=>(5), is.number, is.defined, is.primitive, is.truthy, is.real, is.numberish);
-	_is(()=>(new Number(0)), is.number, is.defined, is.object, is.objectish, is.truthy, is.real, is.numberish);
-	_is(()=>(new Number(5)), is.number, is.defined, is.object, is.objectish, is.truthy, is.real, is.numberish);
+	_is(()=>(0), is.number, is.defined, is.primitive, is.falsy, is.finite, is.numberish);
+	_is(()=>(5), is.number, is.defined, is.primitive, is.truthy, is.finite, is.numberish);
+	_is(()=>(new Number(0)), is.number, is.defined, is.object, is.objectish, is.truthy, is.finite, is.numberish);
+	_is(()=>(new Number(5)), is.number, is.defined, is.object, is.objectish, is.truthy, is.finite, is.numberish);
 	_is(()=>(Infinity), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
 	_is(()=>(-1/0), is.number, is.defined, is.primitive, is.truthy, is.infinite, is.numberish);
 	_is(()=>(new Number(Infinity)), is.number, is.defined, is.object, is.objectish, is.truthy, is.infinite, is.numberish);
