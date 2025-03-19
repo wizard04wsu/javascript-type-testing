@@ -145,6 +145,9 @@ function is(value){
 }
 
 for(const propName in new TypeTest()){
+	// For each descriptor name:
+	
+	// Add an enumerable property to the `is` function.
 	Object.defineProperty(is, propName, {
 		value: propName,
 		enumerable: true,
