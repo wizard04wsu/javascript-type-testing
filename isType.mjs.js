@@ -147,12 +147,10 @@ function is(value){
 for(const propName in new TypeTest()){
 	// For each descriptor name:
 	
-	// Add a getter to the `is` function that returns the name of the descriptor.
-	// This allows you to do `is(val).all(is.number, is.object)` instead of `is(val).all('number', 'object')`.
+	// Add an enumerable property to the `is` function.
 	Object.defineProperty(is, propName, {
-		get: function(){ return propName; },
+		value: propName,
 		enumerable: true,
-		configurable: true,
 	});
 }
 
