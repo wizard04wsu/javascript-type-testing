@@ -70,7 +70,7 @@ A descriptor is a boolean value that is `true` if it applies to the value being 
 | **error**        |    yes    |                               | `Error`
 | **function**     |    yes    |                               | `Function`
 | **promise**      |    yes    |                               | `Promise`
-| **regex**        |    yes    |                               | `Regex`
+| **regex**        |    yes    |                               | `RegExp`
 
 
 [^1]: The "object" type is only used for a value if no other type is appropriate.
