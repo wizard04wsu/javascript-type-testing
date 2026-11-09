@@ -110,19 +110,16 @@ class TypeTest {
 
 class IsType extends TypeTest {
 	
-	#valueConstructor;
-	
 	constructor(value){
 		super(value);
-		if(value instanceof Object) this.#valueConstructor = value.constructor;
 	}
 	
 	get type(){
 		return this.toString();
 	}
 	
-	of(constructor){
-		return !!(this.#valueConstructor && (this.#valueConstructor === constructor ||  this.#valueConstructor.prototype instanceof constructor));
+	of(classConstructor){
+		return this instanceof classConstructor;
 	}
 	
 	all(...propNames){
